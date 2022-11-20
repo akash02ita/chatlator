@@ -6,7 +6,7 @@ const setupDb = (dbUrl) => {
         useUnifiedTopology: true 
     };
 
-    mongoose.connect(dbUrl,connectionParams)
+    mongoose.connect(dbUrl,connectionParams);
 
     mongoose.connection.on('connected', () => {
         console.log('The Mongo Database has connected succesfully')

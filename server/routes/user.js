@@ -4,7 +4,7 @@ import express from "express";
 const usersRouter = express.Router();
 
 usersRouter
-    .get('/', usersController.getOneUser)
+    .get('/', usersController.getUsers)
     .post('/', usersController.createUser);
 
 export default usersRouter;

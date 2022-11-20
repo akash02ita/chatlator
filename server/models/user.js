@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.statics.createUser = async function (name, username, email, primaryLanguage) {
     try {
-        const user = await this.create({ name });
+        const user = await this.create({ name, username, email, primaryLanguage });
         return user;
     } catch (error) {
         throw error;
