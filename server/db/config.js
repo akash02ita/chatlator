@@ -3,11 +3,10 @@ import mongoose from "mongoose";
 const setupDb = (dbUrl) => {
     const connectionParams = {
         useNewUrlParser: true,
-        useCreateIndex: true,
         useUnifiedTopology: true 
     };
 
-    mongoose.connect(url,connectionParams)
+    mongoose.connect(dbUrl,connectionParams)
 
     mongoose.connection.on('connected', () => {
         console.log('The Mongo Database has connected succesfully')

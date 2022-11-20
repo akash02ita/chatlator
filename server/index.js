@@ -3,6 +3,8 @@ import express from "express";
 import http from "http";
 
 import usersRouter from "./routes/user.js";
+import setupDb from "./db/config.js";
+
 
 dotenv.config();
 
