@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import http from "http";
+import bodyParser from "body-parser";
 
 import usersRouter from "./routes/user.js";
 import setupDb from "./db/config.js";
@@ -10,12 +11,12 @@ dotenv.config();
 setupDb(process.env.DB_URL);
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/users", usersRouter);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const appPort = process.env.PORT || 3000;
 
+app.use("/users", usersRouter);
 app.get("/", async (req, res) => {
   return res.status(200).json({ message: "Hello World" });
 });
