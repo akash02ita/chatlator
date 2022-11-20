@@ -7,10 +7,11 @@ import setupDb from "./db/config.js";
 
 
 dotenv.config();
+setupDb(process.env.DB_URL);
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use("/users", usersRouter);
 
 const appPort = process.env.PORT || 3000;

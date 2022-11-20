@@ -1,3 +1,4 @@
+import userSchema, { PRIMARY_LANGUAGES } from "../models/user.js";
 
 const usersController = {
     getOneUser: async (req, res) => {
@@ -8,6 +9,16 @@ const usersController = {
             email: "abc@gmail.com",
             primaryLanguage: 'English'
         })
+    },
+
+    createUser: async (req, res) => {
+        try {
+            const { name, username, email, primaryLanguage } = req.body;
+            const newUser = await UserModel.createUser(name, username, email, primaryLanguage);
+            return res.status(200).json({ success: true, newUser });
+        } catch(error) {
+            return res.status(500).json({ success: false, error: error });
+        }
     },
 };
 

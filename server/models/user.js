@@ -27,6 +27,8 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: PRIMARY_LANGUAGES,
         },
+    },
+    {
         timestamps: true,
         collection: "users",
     }
@@ -34,7 +36,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.statics.createUser = async function (name, username, email, primaryLanguage) {
     try {
-        const user = await this.create({ name, username, email, primaryLanguage });
+        const user = await this.create({ name });
         return user;
     } catch (error) {
         throw error;
@@ -70,7 +72,7 @@ userSchema.statics.getUserByGuid = async function (givenGuid) {
     }
 };
 
-userSchema.statics.deleteByUserById = async function (givenGuid) {
+userSchema.statics.deleteByUserByGuid = async function (givenGuid) {
     try {
         const result = await this.remove({ guid: givenGuid });
         return result;
