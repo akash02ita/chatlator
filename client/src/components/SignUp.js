@@ -14,6 +14,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 
 function Copyright(props) {
   return (
@@ -28,9 +31,13 @@ function Copyright(props) {
   );
 }
 
+
+
 const theme = createTheme();
 
 export default function SignUp() {
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -39,7 +46,10 @@ export default function SignUp() {
       password: data.get('password'),
     });
   };
-
+  function handleClick(popupState, lang) {
+    popupState.close;
+    console.log(lang);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -101,6 +111,27 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Button variant="contained" {...bindTrigger(popupState)}>
+                      Please  Select  First  languange
+                    </Button>
+                    <Menu {...bindMenu(popupState)}>
+                      <MenuItem onClick={handleClick(popupState,"English")}>English</MenuItem>
+                      <MenuItem onClick={popupState.close}>French</MenuItem>
+                      <MenuItem onClick={popupState.close}>Spanish</MenuItem>
+                      <MenuItem onClick={popupState.close}>German</MenuItem>
+                      <MenuItem onClick={popupState.close}>Chinese</MenuItem>
+                      <MenuItem onClick={popupState.close}>Arabic</MenuItem>
+                      <MenuItem onClick={popupState.close}>Hindi</MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
