@@ -37,6 +37,7 @@ const theme = createTheme();
 export default function SignUp() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [userLanguange, setUserLanguage] = useState("Please  Select  First  languange")
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,11 +49,7 @@ export default function SignUp() {
   };
   function setLanguage(lang) {
     setAnchorEl(null);
-    console.log(lang);
-  };
-  function setLanguage(lang) {
-    setAnchorEl(null);
-    console.log(lang);
+    setUserLanguage(lang);
   };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -126,11 +123,12 @@ export default function SignUp() {
               <Grid item xs={12}>
                 <Button
                   variant="contained"
+                  fullWidth
                   disableElevation
                   onClick={handleClick}
                   endIcon={<KeyboardArrowDownIcon />}
                 >
-                  Please  Select  First  languange
+                  {userLanguange}
                 </Button>
                 <Menu
                   anchorEl={anchorEl}
