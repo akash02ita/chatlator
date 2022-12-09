@@ -5,8 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,7 +14,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { useState } from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 function Copyright(props) {
   return (
@@ -36,7 +35,8 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -46,10 +46,21 @@ export default function SignUp() {
       password: data.get('password'),
     });
   };
-  function handleClick(popupState, lang) {
-    popupState.close;
+  function setLanguage(lang) {
+    setAnchorEl(null);
     console.log(lang);
   };
+  function setLanguage(lang) {
+    setAnchorEl(null);
+    console.log(lang);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -113,31 +124,27 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                
-              <PopupState variant="popover" popupId="demo-popup-menu">
-                {(popupState) => (
-                  <React.Fragment>
-                    <Button variant="contained" {...bindTrigger(popupState)}>
-                      Please  Select  First  languange
-                    </Button>
-                    <Menu {...bindMenu(popupState)}>
-                      <MenuItem onClick={handleClick(popupState,"English")}>English</MenuItem>
-                      <MenuItem onClick={popupState.close}>French</MenuItem>
-                      <MenuItem onClick={popupState.close}>Spanish</MenuItem>
-                      <MenuItem onClick={popupState.close}>German</MenuItem>
-                      <MenuItem onClick={popupState.close}>Chinese</MenuItem>
-                      <MenuItem onClick={popupState.close}>Arabic</MenuItem>
-                      <MenuItem onClick={popupState.close}>Hindi</MenuItem>
-                    </Menu>
-                  </React.Fragment>
-                )}
-              </PopupState>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
+                <Button
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  endIcon={<KeyboardArrowDownIcon />}
+                >
+                  Please  Select  First  languange
+                </Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={() => setLanguage("English")}>English</MenuItem>
+                  <MenuItem onClick={() => setLanguage("French")}>French</MenuItem>
+                  <MenuItem onClick={() => setLanguage("Spanish")}>Spanish</MenuItem>
+                  <MenuItem onClick={() => setLanguage("German")}>German</MenuItem>
+                  <MenuItem onClick={() => setLanguage("Chinese")}>Chinese</MenuItem>
+                  <MenuItem onClick={() => setLanguage("Arabic")}>Arabic</MenuItem>
+                  <MenuItem onClick={() => setLanguage("Hindi")}>Hindi</MenuItem>
+                </Menu>
               </Grid>
             </Grid>
             <Button
@@ -148,7 +155,7 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="center">
               <Grid item>
                 <Link href="#" variant="body2">
                   Already have an account? Sign in
