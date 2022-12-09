@@ -10,10 +10,10 @@ import Chat from './junk_tests_experiments/Chat';
 function App() {
   return (
     <div className="App">
-      {/* <Sample1 />  */}
+      {/* <Sample1 /> */}
       {/* <SignIn /> */}
-      {/* <SignUp /> */}
-      <Chat />
+      { <SignUp /> }
+      {/* <Chat /> */ }
     </div>
   );
 }

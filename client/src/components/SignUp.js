@@ -14,6 +14,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+//import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+// For using FormControl
+// import { Form, FormGroup, ControlLabel } from "react-bootstrap";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+
+
+
 
 function Copyright(props) {
   return (
@@ -28,9 +39,13 @@ function Copyright(props) {
   );
 }
 
+
+
 const theme = createTheme();
 
 export default function SignUp() {
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -39,6 +54,11 @@ export default function SignUp() {
       password: data.get('password'),
     });
   };
+
+  // function handleClick(popupState, lang) {
+  //   popupState.close;
+  //   console.log(lang);
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -102,6 +122,50 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
+
+            
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">First Language</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+               // value={age}
+                label="First Language"
+                onChange={() => console.log("Changed") }
+              >
+                <MenuItem value={10}>English</MenuItem>
+                <MenuItem value={20}>Spanish</MenuItem>
+                <MenuItem value={30}>French</MenuItem>
+                <MenuItem value={40}>German</MenuItem>
+                <MenuItem value={30}>Chinese</MenuItem>
+                <MenuItem value={30}>Arabic</MenuItem>
+                <MenuItem value={30}>Hindi</MenuItem>
+              </Select>
+            </FormControl>
+
+
+{/*               
+              <Grid item xs={12}>
+                
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Button variant="contained" {...bindTrigger(popupState)}>
+                      Please  Select  First  languange
+                    </Button>
+                    <Menu {...bindMenu(popupState)}>
+                      <MenuItem onClick={handleClick(popupState,"English")}>English</MenuItem>
+                      <MenuItem onClick={popupState.close}>French</MenuItem>
+                      <MenuItem onClick={popupState.close}>Spanish</MenuItem>
+                      <MenuItem onClick={popupState.close}>German</MenuItem>
+                      <MenuItem onClick={popupState.close}>Chinese</MenuItem>
+                      <MenuItem onClick={popupState.close}>Arabic</MenuItem>
+                      <MenuItem onClick={popupState.close}>Hindi</MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>
+              </Grid> */}
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
