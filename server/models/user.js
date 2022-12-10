@@ -4,6 +4,11 @@ import mongoose from "mongoose";
 export const PRIMARY_LANGUAGES = {
     ENGLISH: "English",
     FRENCH: "French",
+    SPANISH: "Spanish",
+    GERMAN: "Hindi",
+    CHINESE: "Chinese",
+    ARABIC: "Arabic",
+    HINDI: "Hindi",
 };
 
 
