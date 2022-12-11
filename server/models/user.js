@@ -5,7 +5,7 @@ export const PRIMARY_LANGUAGES = {
     ENGLISH: "English",
     FRENCH: "French",
     SPANISH: "Spanish",
-    GERMAN: "Hindi",
+    GERMAN: "German",
     CHINESE: "Chinese",
     ARABIC: "Arabic",
     HINDI: "Hindi",
