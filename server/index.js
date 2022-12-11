@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 
 import usersRouter from "./routes/user.js";
 import randomRouter from "./routes/random.js";
+import chatRouter from "./routes/chat.js";
+
 import setupDb from "./db/config.js";
 
 
@@ -19,6 +21,7 @@ const appPort = process.env.PORT || 3000;
 
 app.use("/users", usersRouter);
 app.use("/random", randomRouter);
+app.use("/chat", chatRouter);
 
 app.get("/", async (req, res) => {
   return res.status(200).json({ message: "Hello World" });
