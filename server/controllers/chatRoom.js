@@ -1,16 +1,18 @@
 import ChatRoomModel from "../models/chatRoom.js";
 
-// userInfo looks like this:
-//  userInfo = {
-//     "user1Guid": {
+// Request body  looks like this:
+// {
+//     "userInfo":{ 
+//         "user1Guid": {
 
-//         "username": "blah blah",
-//         "primaryLanguage": "something something"
-//     },
-//     "user2Guid": {
+//             "username": "blah blah",
+//             "primaryLanguage": "something something"
+//         },
+//         "user2Guid": {
 
-//         "username": "blah blah again",
-//         "primaryLanguage": "something something again"
+//             "username": "blah blah again",
+//             "primaryLanguage": "something something again"
+//         }
 //     }
 // }
 
