@@ -41,6 +41,17 @@ const chatMessagesController = {
         } catch (error) {
             return res.status(500).json({ success: false, error: error });
         }
+    },
+    
+    getLatestChat: async (req, res) => {
+        try {
+            const { roomGuid } = req.body;
+            const latestChat = await ChatMessageModel.getLatestChatByRoomGuid(roomGuid);
+            return res.status(200).json({ success: true, chats: latestChat });
+            
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error });
+        }
     }
 };
 

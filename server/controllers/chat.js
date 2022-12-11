@@ -14,6 +14,9 @@ const chatController = {
     },
     getHistoryChats: async (req, res) => {
         return chatMessagesController.getHistoryChats(req, res);
+    },
+    getLatestChat: async (req, res) => {
+        return chatMessagesController.getLatestChat(req, res);
     }
 };
 

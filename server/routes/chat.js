@@ -7,6 +7,7 @@ chatRouter
     .post('/createRoom', chatController.handleCreateRoom)
     .post('/sendMessage', chatController.handleSendMessage)
     .post('/getHistoryRooms', chatController.getHistoryRooms)
-    .post('/getHistoryChats', chatController.getHistoryChats);
+    .post('/getHistoryChats', chatController.getHistoryChats)
+    .post('/pollLatestChat', chatController.getLatestChat);
 
 export default chatRouter;

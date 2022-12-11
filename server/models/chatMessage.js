@@ -39,4 +39,22 @@ chatMessageSchema.statics.getHistoryChatsByRoomGuid = async function (roomGuid) 
   }
 }
 
+chatMessageSchema.statics.getLatestChatByRoomGuid = async function (roomGuid) {
+  try {
+    /*
+      both approaches work, but the first line seems a better choice. For example if there nothing found:
+      - the first one will have null and return null
+      - the second one might be undefined and not probably ideal (try a guid id that has no chat messages. That will make more sense)
+    */
+    // https://stackoverflow.com/questions/12467102/how-to-get-the-latest-and-oldest-record-in-mongoose-js-or-just-the-timespan-bet
+    const latestChat = await this.findOne({ roomGuid: roomGuid }, {}, { sort: { 'createdAt' : -1 } }); // works
+    // const [latestChat] = await this.find({ roomGuid: roomGuid }).sort({createdAt: -1}).limit(1); // even this one works
+    console.log("latestChat is ",)
+    return latestChat;
+  
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default mongoose.model("ChatMessage", chatMessageSchema);
