@@ -30,13 +30,16 @@ chatRoomSchema.statics.createChatRoom = async function (userInfo) {
 
 chatRoomSchema.statics.getHistoryRoomsByUserGuid = async function (userGuid) {
   try {
+    /*
     // only want to filter stuff which satisfies: userGuid in Object.keys(userInfo) 
     // currently fetching all rooms from database and then filtering on javascript on server
     const allRooms = await this.find({});
     const filteredRooms = allRooms.filter((e) => {
       return userGuid in e.userInfo;
     });
-    
+    */
+    // successfully figured out on doing it the efficient way and parse directly form database filtered content
+    const filteredRooms = await this.find({ [`userInfo.${userGuid}`]: { $exists: true } });
     return filteredRooms;
 
   } catch (error) {
