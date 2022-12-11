@@ -2,62 +2,29 @@ import { randomUUID } from "crypto";
 import mongoose from "mongoose";
 
 
-export const CHAT_ROOM_TYPES = {
-    CONSUMER_TO_CONSUMER: "consumer-to-consumer",
-    // CONSUMER_TO_SUPPORT: "consumer-to-support", Don't think we'll need this.
-  };
-
-
-// source: https://www.freecodecamp.org/news/create-a-professional-node-express/
-
 const chatRoomSchema = new mongoose.Schema(
-    {
-      _id: { // might have to be changed to guid instead of _id.
+  {
+    guid: {
         type: String,
-        default: () => uuidv4().replace(/\-/g, ""), // We are not using uuidv4. // We'll be using randomUUID() from "crypto"
-      },
-      userIds: Array, // Should only have the IDs of the people in the chat
-      type: String,
-      chatInitiator: String, // Will probably not need this.
+        default: () => randomUUID().replace(/\-/g, ""),
+        unique: true
+    },
+    userInfo: Object,
     },
     {
       timestamps: true,
-      collection: "chatrooms", // ?
+      collection: "chatRooms"
     }
   );
 
 // The statics.
-chatRoomSchema.statics.initiateChat = async function (
-	userIds, type, chatInitiator
-) {
+chatRoomSchema.statics.createChatRoom = async function (userInfo) {
   try {
-    const availableRoom = await this.findOne({
-      userIds: {
-        $size: userIds.length,
-        $all: [...userIds],
-      },
-      type,
-    });
-    if (availableRoom) {
-      return {
-        isNew: false,
-        message: 'retrieving an old chat room',
-        chatRoomId: availableRoom._doc._id,
-        type: availableRoom._doc.type,
-      };
-    }
-
-    const newRoom = await this.create({ userIds, type, chatInitiator });
-    return {
-      isNew: true,
-      message: 'creating a new chatroom',
-      chatRoomId: newRoom._doc._id,
-      type: newRoom._doc.type,
-    };
+    const chatRoom = await this.create({ userInfo });
+    return chatRoom
   } catch (error) {
-    console.log('error on start chat method', error);
     throw error;
   }
-}
+};
 
-export default mongoose.model("ChatRoom", chatRoomSchema);
+export default mongoose.model("chatRoom", chatRoomSchema);
