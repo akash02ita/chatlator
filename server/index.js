@@ -21,7 +21,7 @@ const appPort = process.env.PORT || 3000;
 
 app.use("/users", usersRouter);
 app.use("/random", randomRouter);
-app.use("/chat", chatRouter);
+app.use("/chats", chatRouter);
 
 app.get("/", async (req, res) => {
   return res.status(200).json({ message: "Hello World" });

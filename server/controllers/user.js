@@ -11,7 +11,7 @@ const usersController = {
         })
     },
 
-    createUser: async (req, res) => {
+    handleCreateUser: async (req, res) => {
         try {
             const { name, username, email, primaryLanguage } = req.body;
             const newUser = await UserModel.createUser(name, username, email, primaryLanguage);
@@ -22,7 +22,7 @@ const usersController = {
     },
 
 
-    getUsers: async (req, res) => {
+    handleGetUsers: async (req, res) => {
         try {
             const allUsers = await UserModel.getUsers();
             return res.status(200).json({ success: true, allUsers });
