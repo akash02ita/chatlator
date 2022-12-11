@@ -6,14 +6,17 @@ import ChatMessageModel from "../models/chatMessage.js";
 //     "senderGuid": "The user Guid of the sender sending the stuff in"
 // }
 
+// Need to still implement this
+/*
+    idea1: use existing javascript library for translation
+    idea2: use google api calls or somethings similar
+    idea3: use `translate.google.com/m` and parse html translated code
+*/
+const translateMessage = () => {
+    return "TODO: yet translation";
+}
 
 const chatMessagesController = {
-    // Need to change this afterwards
-    translateMessage: function() {
-        var temp = this;
-        return "blah blah this message got Translated";
-    },
-
     handleCreateChatMessage: async (req, res) => {
         try {
             const { contentOriginal, roomGuid, senderGuid } = req.body;
@@ -27,9 +30,18 @@ const chatMessagesController = {
         } catch(error) {
             return res.status(500).json({ success: false, error: error });
         }
-    }
+    },
 
-    
+    getHistoryChats: async (req, res) => {
+        try {
+            const { roomGuid } = req.body;
+            const filteredChats = await ChatMessageModel.getHistoryChatsByRoomGuid(roomGuid);
+            return res.status(200).json({ success: true, chats: filteredChats });
+            
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error });
+        }
+    }
 };
 
 export default chatMessagesController;

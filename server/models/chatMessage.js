@@ -29,4 +29,14 @@ chatMessageSchema.statics.createChatMessage = async function (contentOriginal, c
   }
 };
 
+chatMessageSchema.statics.getHistoryChatsByRoomGuid = async function (roomGuid) {
+  try {
+    const filteredChats = await this.find({ roomGuid: roomGuid });
+    return filteredChats;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
 export default mongoose.model("ChatMessage", chatMessageSchema);

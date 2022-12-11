@@ -13,6 +13,7 @@ const chatController = {
         return chatRoomsController.getHistoryRooms(req, res);
     },
     getHistoryChats: async (req, res) => {
+        return chatMessagesController.getHistoryChats(req, res);
     }
 };
 
