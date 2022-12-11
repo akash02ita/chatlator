@@ -11,8 +11,8 @@ const chatMessageSchema = new mongoose.Schema(
     },
     contentOriginal: String,
     contentTranslated: String,
-    roomId: String,
-    senderId: String
+    roomGuid: String,
+    senderGuid: String
     },
     {
       timestamps: true,
@@ -20,10 +20,10 @@ const chatMessageSchema = new mongoose.Schema(
     }
   );
 
-chatRoomSchema.statics.createChatMessage = async function (contentOriginal, contentTranslated, roomId, senderId) {
+chatMessageSchema.statics.createChatMessage = async function (contentOriginal, contentTranslated, roomGuid, senderGuid) {
   try {
-    const chatMessage = await this.create({ contentOriginal, contentTranslated, roomId, senderId });
-    return chatMessage
+    const chatMessage = await this.create({ contentOriginal, contentTranslated, roomGuid, senderGuid });
+    return chatMessage;
   } catch (error) {
     throw error;
   }

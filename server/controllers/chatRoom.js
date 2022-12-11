@@ -23,7 +23,7 @@ const chatRoomsController = {
         try {
             const { userInfo } = req.body;
             const newRoom = await ChatRoomModel.createChatRoom(userInfo);
-            return res.status(200).json({ success: true, newRoom });
+            return res.status(200).json({ success: true, room: newRoom });
         } catch(error) {
             return res.status(500).json({ success: false, error: error });
         }

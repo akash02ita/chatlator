@@ -15,7 +15,7 @@ const usersController = {
         try {
             const { name, username, email, primaryLanguage } = req.body;
             const newUser = await UserModel.createUser(name, username, email, primaryLanguage);
-            return res.status(200).json({ success: true, newUser });
+            return res.status(200).json({ success: true, user: newUser });
         } catch(error) {
             return res.status(500).json({ success: false, error: error });
         }
