@@ -4,11 +4,14 @@ const whoIsLookingForRP = {}; // Who is looking for random people
 
 const whoIsTryingTo_PU = {}; // Who is trying to pair up.
 // Might need to be some sort of dictionary? 
-    // In essence, each user, is gonna have another structure, could be a list, array
+    // In essence, each user, is gonna have another structure, could be a list, Vector, Array.
     // but all those elements in there would indicate that these "elements/users" have an interest 
     // in having a chat with the user of the "key"
-        // so maybe the data structure could be a Dictionary as is
-            // inside of it, however, there are key -> Array 
+        // so maybe the data structure could be a Dictionary.
+            // inside of it, there are key (probably just the GUID), this gets mapped to -> Vector/Array 
+    // When the user sends a request to see who is trying to pair, the Vector/Array could get sent back?
+
+
 
 const updateLiveData = ({ username, email, primaryLanguage, learnLanguage }) => {
     const key = username;
@@ -49,6 +52,13 @@ const randomController = {
     }
 };
 
+
+// Route for a stranger to add themselves to the array inside the Dictionary
+// The key the stranger provides would be the person (the other stranger) that 
+// they want to talk to.
+randomController.statics.addMyself_ToStrList = (req, res) => {
+    
+}
 
 
 // const randomController = { handleRandomUsers_PR };
