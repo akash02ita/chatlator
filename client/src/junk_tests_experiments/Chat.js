@@ -34,6 +34,7 @@ const useStyles = makeStyles({
         height: '70vh',
         overflowY: 'auto'
     }
+    
 });
 
 const Chat = () => {

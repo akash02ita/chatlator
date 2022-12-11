@@ -103,6 +103,11 @@ export default function SignIn() {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
+              <Grid item>
+                <Link href="Chat" variant="body2">
+                  {"Bypass signup to chat"}
+                </Link>
+              </Grid>
             </Grid>
           </Box>
         </Box>
