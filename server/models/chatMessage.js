@@ -29,4 +29,4 @@ chatRoomSchema.statics.createChatMessage = async function (contentOriginal, cont
   }
 };
 
-export default mongoose.model("chatMessage", chatMessageSchema);
+export default mongoose.model("ChatMessage", chatMessageSchema);
