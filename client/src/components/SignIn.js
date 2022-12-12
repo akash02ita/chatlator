@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import logo from './logo.jpg'
 
 function Copyright(props) {
   return (
@@ -52,10 +53,25 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          {/* <Avatar alt="Remy Sharp" src="/images/logo.jpg" /> */}
+          <Avatar src="C:\Users\smqur\source\repos\seng-513-project\client\src\components\images\logo.jpg" /> */}
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} src="../images/logo.jpg"> */}
+            {/* <LockOutlinedIcon /> */}
+            {/* <img src="logo.jpg"></img> */}
+          {/* </Avatar> */}
+          <Box
+        component="img"
+        sx={{
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 233, md: 167 },
+        }}
+        alt="The house from the offer."
+        src={logo}
+      />
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
@@ -80,10 +96,10 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               href="Chat"
               type="submit"
@@ -94,11 +110,11 @@ export default function SignIn() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="SignUp" variant="body2">
                   {"Don't have an account? Sign Up"}
