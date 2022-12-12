@@ -51,7 +51,6 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState();
     const [currentRoom, setCurrentRoom] = useState(null);
-    const [currentLatestChatId, setCurrentLatestChatId] = useState(null);
 
     const refreshLatestChat = () => {
         console.log("hello")
@@ -61,6 +60,7 @@ const Chat = () => {
             return;
         }
 
+        /* // inefficient: works but now the efficient works better.
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -79,8 +79,11 @@ const Chat = () => {
                     setMessages(data.chats);
                 }
             });
+        */
         
-        /* currently not working: closure issues. 'messages' is closed to empty list unfortunately
+        //currently working: closure issues. 'messages' is closed to empty list unfortunately
+        // however this has been fixed by adding dependency in useEffect to achieve same thing without issues
+        // according to several test and spam clicks no duplicate issues coming up
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -89,30 +92,21 @@ const Chat = () => {
             })
           };
 
-          let backupGuid = currentRoom.roomGuid;
-          fetch("chats/pollLatestChat", requestOptions)
+        fetch("chats/pollLatestChat", requestOptions)
             .then(response => response.json())
             .then(data => { console.log("Chat.js update latest chat data is ", data); return data; })
             .then((data) => {
-              if (data["success"]){ // if it's true, successful, 
-                const latestChat = data["chats"]; 
-                console.log("currentLatestChatId is ",currentLatestChatId);
-                if (latestChat) {
-                    if (latestChat.guid !== currentLatestChatId) {
+                if (data["success"]) { // if it's true, successful, 
+                    const latestChat = data["chats"];
+                    // console.log("currentLatestChatId is ",currentLatestChatId);
+                    const currentLatestChatGuid = messages.length ? messages[messages.length - 1].guid : null;
+                    if (latestChat && latestChat.guid !== currentLatestChatGuid) {
                         console.log("Difference in guid detected for latest chat...");
-                        if (backupGuid == currentRoom.roomGuid) {
-                            console.log("Latest chat applying new changes...")
-                            setCurrentLatestChatId(latestChat.guid);
-                            setMessages([...messages, latestChat]);
-                        } else {
-                            setCurrentLatestChatId(null);
-                        }
+                        setMessages([...messages, latestChat]);
                     }
                 }
-              } 
-             // return "nothing"; // not entirely sure what this is for.
             }); 
-        */
+        
     }
 
     // first time render only
@@ -121,43 +115,46 @@ const Chat = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              "userGuid": userGuid
+                "userGuid": userGuid
             })
-          };
-      
-          fetch("chats/getHistoryRooms", requestOptions)
+        };
+
+        fetch("chats/getHistoryRooms", requestOptions)
             .then(response => response.json())
             .then(data => { console.log("Chat.js rooms data is ", data); return data; })
             .then((data) => {
-              if (data["success"]){ // if it's true, successful, 
-                const newRooms = data.rooms.map((room) => {
-                    const previousUserGuid = Object.keys(room.userInfo).filter((e) => e !== userGuid)[0];
-                    return {
-                        "user": room.userInfo[previousUserGuid].name,
-                        "userGuid": previousUserGuid,
-                        "language": room.userInfo[previousUserGuid].primaryLanguage,
-                        "status": "Offline",
-                        "roomGuid": room.guid 
-                    };
-                });
+                if (data["success"]) { // if it's true, successful, 
+                    const newRooms = data.rooms.map((room) => {
+                        const previousUserGuid = Object.keys(room.userInfo).filter((e) => e !== userGuid)[0];
+                        return {
+                            "user": room.userInfo[previousUserGuid].name,
+                            "userGuid": previousUserGuid,
+                            "language": room.userInfo[previousUserGuid].primaryLanguage,
+                            "status": "Offline",
+                            "roomGuid": room.guid
+                        };
+                    });
 
-                setHistoryRooms(newRooms);
-              } 
-             // return "nothing"; // not entirely sure what this is for.
+                    setHistoryRooms(newRooms);
+                }
+                // return "nothing"; // not entirely sure what this is for.
             });
 
-        }, []);
-        
-        useEffect(() => {
+    }, []);
+
+    // render each time currentRoom or messages list changes
+    // currentRoom changes only when selected room is changed in handleSetCurrentRoom
+    // messages changes only when chat history message is done being set in handleSetCurrentRoom
+    useEffect(() => {
         if (currentRoom) {
             // keep polling ever ms milliseconds
             const ms = 500;
             const idinterval = setInterval(refreshLatestChat, ms);
-            
+
             // clearinterval will run once component unmounts
             return () => clearInterval(idinterval);
         }
-    }, [currentRoom]);
+    }, [currentRoom, messages]);
 
     const handleSetCurrentRoom = (room) => {
         // console.log("new room value", room);
