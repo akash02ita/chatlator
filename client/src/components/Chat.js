@@ -138,7 +138,7 @@ const Chat = () => {
                             "user": room.userInfo[previousUserGuid].name,
                             "userGuid": previousUserGuid,
                             "language": room.userInfo[previousUserGuid].primaryLanguage,
-                            "status": "Offline",
+                            "status": "Online",
                             "roomGuid": room.guid
                         };
                     });
