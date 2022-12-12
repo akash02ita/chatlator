@@ -3,8 +3,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 export default function Message(props) {
+  console.log(props)
   return (
-    <ListItem key={props.key}>
+    <ListItem>
       <Grid container>
         <Grid item xs={12}>
           <ListItemText align={props.side} primary={props.contentOriginal}></ListItemText>

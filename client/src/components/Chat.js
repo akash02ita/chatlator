@@ -85,7 +85,27 @@ const Chat = () => {
     }, []);
 
     const handleSetCurrentRoom = (room) => {
+        console.log("going to do stuff", room);
         setCurrentRoom(room);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              "roomGuid": room.roomGuid
+            })
+          };
+      
+          fetch("chats/getHistoryChats", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                 console.log("Chat.js history chats data is ", data); return data; })
+            .then((data) => {
+              if (data["success"]){ // if it's true, successful, 
+                // historyMessages = data.map();
+                setMessages(data.chats);
+              } 
+             // return "nothing"; // not entirely sure what this is for.
+            });
     }
 
     let peopleList = historyRooms.map((room) => {
@@ -111,10 +131,13 @@ const Chat = () => {
         }
     }
 
-    let messagesContent = messages.map((message, index) => {
-        return (
-            <Message key={index} side={message.side} contentOriginal={message.contentOriginal} contentTranslated={message.contentTranslated} updatedAt={message.updatedAt}></Message>
-        )
+    let messagesContent = messages.map((message) => {
+        const side = message.senderGuid === userGuid ? "right" : "left";
+        if (message.guid) {
+            return (
+                <Message key={message.guid} side={side} contentOriginal={message.contentOriginal} contentTranslated={message.contentTranslated} updatedAt={message.updatedAt}></Message>
+            )
+        }
     })
 
     const renderCurrentChatRoom = () => {
