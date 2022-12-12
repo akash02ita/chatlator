@@ -1,7 +1,10 @@
 import ChatMessageModel from "../models/chatMessage.js";
+import translate from 'google-translate-api-x';
 
 // {
 //     "contentOriginal": "This is a message",
+//     "languageOriginal" too bro
+//     "languageTranslate": "Translate language",  
 //     "roomGuid": "The guid of the room to which the chat Belongs",
 //     "senderGuid": "The user Guid of the sender sending the stuff in"
 // }
@@ -12,18 +15,24 @@ import ChatMessageModel from "../models/chatMessage.js";
     idea2: use google api calls or somethings similar
     idea3: use `translate.google.com/m` and parse html translated code
 */
-const translateMessage = () => {
-    return "TODO: yet translation";
-}
+
+const LANG_CODES = {
+    "English": "en",
+    "French": "fr",
+    "Spanish": "es",
+    "German": "de",
+    "Chinese": "zh-TW",
+    "Arabic": "ar",
+    "Hindi": "hi"
+};
 
 const chatMessagesController = {
     handleCreateChatMessage: async (req, res) => {
         try {
-            const { contentOriginal, roomGuid, senderGuid } = req.body;
+            const { contentOriginal, languageOriginal, languageTranslate, roomGuid, senderGuid } = req.body;
             // Find the receiver and then the primary language of the receiver using
             // roomGuid and senderGuid and then feed it to the translate message
-            const translateLanguage = "some Language"; // need to get this using 
-            const contentTranslated = "blah translated";
+            const apiRes = await translate(contentOriginal, {from:LANG_CODES[languageOriginal], to:LANG_CODES[languageTranslate]});
 
             const newMessage = await ChatMessageModel.createChatMessage(contentOriginal, contentTranslated, roomGuid, senderGuid);
             return res.status(200).json({ success: true, message: newMessage });
