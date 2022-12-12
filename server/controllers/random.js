@@ -3,21 +3,21 @@ const livePairRequestData = {};
 const livePairRequestStatusData = {};
 
 
-const updateLiveData = ({ username, email, primaryLanguage, learnLanguage }) => {
-    const key = username;
-    liveSearchData[primaryLanguage][key] = learnLanguage;
+const updateLiveData = ({ email, name, primaryLanguage, learnLanguage }) => {
+    const key = email;
+    liveSearchData[primaryLanguage][key] = [name, learnLanguage];
 }
 
-const findMatches = ({ username, email, primaryLanguage, learnLanguage }) => {
+const findMatches = ({primaryLanguage, learnLanguage }) => {
     if (learnLanguage in liveSearchData) {
         // all users
-        const targetUsers = Object.keys(liveSearchData[learnLanguage]);
+        const targetUsersGuid = Object.keys(liveSearchData[learnLanguage]);
 
         // filter users only with a match
-        const matchingUsers = targetUsers.filter((tu) => liveSearchData[learnLanguage][tu] === primaryLanguage);
+        const matchingUsersGuid = targetUsersGuid.filter((tu) => liveSearchData[learnLanguage][tu][1] === primaryLanguage);
 
-        if (matchingUsers) {
-            return matchingUsers;
+        if (matchingUsersGuid) {
+            return matchingUsersGuid.map((tu) => [tu, liveSearchData[learnLanguage][tu][0]]);
         };
     }
 
@@ -27,18 +27,19 @@ const findMatches = ({ username, email, primaryLanguage, learnLanguage }) => {
 const randomController = {
     handleRandomUsersSearch: async (req, res) => { // why async? does it need to be?
         // When we get a user, it does not come with learnLanguage in the "user" object.
-        const { username, email, primaryLanguage, learnLanguage } = req.body;
+        const { email, name, primaryLanguage, learnLanguage } = req.body;
 
         if (!(primaryLanguage in liveSearchData)) {
             liveSearchData[primaryLanguage] = {};
         }
 
-        updateLiveData({ username, email, primaryLanguage, learnLanguage });
+        updateLiveData({ email, name, primaryLanguage, learnLanguage });
 
 
-        const matches = findMatches({ username, email, primaryLanguage, learnLanguage });
+        const matches = findMatches({ primaryLanguage, learnLanguage });
+        const pairuprequests = livePairRequestData[email] ? livePairRequestData[email] : {};
 
-        return res.status(200).json({ "matches": matches });
+        return res.status(200).json({ "matches": matches, "pairuprequests": pairuprequests});
     },
 
     handlePairUpRequest: async (req, res) => {
