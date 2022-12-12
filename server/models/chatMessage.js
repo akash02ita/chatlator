@@ -9,16 +9,28 @@ const chatMessageSchema = new mongoose.Schema(
         default: () => randomUUID().replace(/\-/g, ""),
         unique: true
     },
-    contentOriginal: String,
-    contentTranslated: String,
-    roomGuid: String,
-    senderGuid: String
+    contentOriginal: {
+      type: String,
+      required: true
     },
-    {
-      timestamps: true,
-      collection: "chatMessages"
+    contentTranslated: {
+      type: String,
+      required: true
+    },
+    roomGuid:  {
+      type: String,
+      required: true
+    },
+    senderGuid: {
+      type: String,
+      required: true
     }
-  );
+  },
+  {
+    timestamps: true,
+    collection: "chatMessages"
+  }
+);
 
 chatMessageSchema.statics.createChatMessage = async function (contentOriginal, contentTranslated, roomGuid, senderGuid) {
   try {

@@ -10,13 +10,16 @@ const chatRoomSchema = new mongoose.Schema(
         default: () => randomUUID().replace(/\-/g, ""),
         unique: true
     },
-    userInfo: Object,
-    },
-    {
-      timestamps: true,
-      collection: "chatRooms"
+    userInfo: {
+      type: Object,
+      required: true
     }
-  );
+  },
+  {
+    timestamps: true,
+    collection: "chatRooms"
+  }
+);
 
 // The statics.
 chatRoomSchema.statics.createChatRoom = async function (userInfo) {
