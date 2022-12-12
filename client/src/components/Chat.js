@@ -14,7 +14,7 @@ import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 import ChatUser from './ChatUser';
 import Message from './Message';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../App.css';
 
 // imports for dialog
@@ -26,6 +26,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
+import { MenuItem, Menu } from '@material-ui/core';
+import { KeyboardArrowDown } from '@material-ui/icons';
 
 // for dialog
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -337,12 +339,37 @@ const Chat = () => {
         );
     }
 
+    const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [learnLanguage, setLearnLanguage] = useState(null);
+    const handleRandomSearchMove = () => {
+        if (!learnLanguage) {alert("select a language you want to learn!"); return};
+        navigate("../randomsearch", {
+            state:
+            {
+                name: name,
+                email: email,
+                primaryLanguage: primaryLanguage,
+                userGuid: userGuid,
+                learnLanguage: learnLanguage
+            }
+        });
+    }
+    const handleClickAnchorEl = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+      const handleCloseAnchorEl = () => {
+        setAnchorEl(null);
+      };
+
     return (
         <div>
             <Grid container component={Paper} className="chat">
     { renderUsers() }
     { renderCurrentChatRoom() }
             </Grid >
+
+    <div>
     <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -352,20 +379,44 @@ const Chat = () => {
         aria-describedby="alert-dialog-slide-description"
     >
         <DialogTitle id="alert-dialog-slide-title">{"Let's search for you a random person..."}</DialogTitle>
-        <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description" className="random-popup">
-                TODO: prompt for a select field on which langauge user wants to learn.
-            </DialogContentText>
-        </DialogContent>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description" className="random-popup">
+                        {/* use componenet as span to avoid DOM errors of div in p */}
+                        <Typography component={'span'} variant='body1'>What language you want to learn?</Typography>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                disableElevation
+                                onClick={handleClickAnchorEl}
+                                endIcon={<KeyboardArrowDown />}
+                                sx={{ color: 'white' }}
+                            >
+                                {learnLanguage ? learnLanguage : "Select a language..."}
+                            </Button>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleCloseAnchorEl}
+                            >
+                                <MenuItem onClick={() => {setLearnLanguage("English"); setAnchorEl(null);}}>English</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("French"); setAnchorEl(null);}}>French</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("Spanish"); setAnchorEl(null);}}>Spanish</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("German"); setAnchorEl(null);}}>German</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("Chinese"); setAnchorEl(null);}}>Chinese</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("Arabic"); setAnchorEl(null);}}>Arabic</MenuItem>
+                                <MenuItem onClick={() => {setLearnLanguage("Hindi"); setAnchorEl(null);}}>Hindi</MenuItem>
+                            </Menu>
+                    </DialogContentText>
+                </DialogContent>
         <DialogActions>
             <Button onClick={handleClose} color="secondary">
                 Go back
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleRandomSearchMove} color="primary">
                 Search for Random People
             </Button>
         </DialogActions>
-    </Dialog>
+    </Dialog></div>
         </div >
     );
 }
