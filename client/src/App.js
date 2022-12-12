@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={ <Welcome/> } />
         <Route path="SignUp" element={ <SignUp/> } />
         <Route path="SignIn" element={ <SignIn/> } />
-        <Route path="Chat" element={ <Chat/> } />
+        <Route path="Chatting" element={ <Chat/> } />
       </Routes>
     </div>
   );

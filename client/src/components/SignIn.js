@@ -16,6 +16,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import logo from './logo.jpg'
 import { useState } from 'react'
+import { useNavigate } from "react-router-dom";
+
+
 
 function Copyright(props) {
   return (
@@ -33,6 +36,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate(); // This is a hook.
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -60,7 +64,23 @@ export default function SignIn() {
       .then(data => { console.log("Signin.js data is ", data); return data; })
       .then((data) => {
         // TODO: move to Chat.js if successful
-        return "nothing";
+        // Getting all the stuff, reponse from server
+        console.log(data);
+        // navigate chat -> 
+        
+
+        
+        if (data["success"]){ // if it's true, successful, 
+          //then parse the data.
+          navigate('../Chatting', { state: 
+                                {name : data["user"].name, // data["name"], 
+                                email : data["user"].email, // data["email"],
+                                primaryLanguage : data["user"].primaryLanguage , 
+                                guid : data["user"].guid,         
+                                } 
+                                }); // I think this is all I need.  
+        } 
+       // return "nothing"; // not entirely sure what this is for.
       });
   }
 

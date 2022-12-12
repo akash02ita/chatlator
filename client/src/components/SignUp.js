@@ -16,6 +16,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -36,6 +37,7 @@ const theme = createTheme();
 const INITIAL_SETUP_LANGUAGE = "Please  Select  First  languange";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [userLanguange, setUserLanguage] = useState(INITIAL_SETUP_LANGUAGE);
@@ -84,8 +86,25 @@ export default function SignUp() {
       .then(response => response.json())
       .then(data => { console.log("Signup.js data is ", data); return data; })
       .then((data) => {
+      
+        console.log(data);
+        // navigate chat -> 
+        
+          
+        
+        if (data["success"]){ // if it's true, successful, 
+          //then parse the data.
+          navigate('../Chatting', { state: 
+                                {name : data["user"].name, // data["name"], 
+                                email : data["user"].email, // data["email"],
+                                primaryLanguage : data["user"].primaryLanguage , 
+                                guid : data["user"].guid,         
+                                } 
+                                }); // I think this is all I need.  
+        } 
+       // return "nothing"; // not entirely sure what this is for.
         // TODO: move to Chat.js if successful
-        return "nothing";
+        //return "nothing";
       });
 
   }

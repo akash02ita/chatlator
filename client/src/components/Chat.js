@@ -63,7 +63,7 @@ const Chat = () => {
 
     let friendsList = friends.map((friend) => {
         return (
-            <ChatUser user={friend.user} language={friend.language} status={friend.status}></ChatUser>
+            <ChatUser key={friend.user} user={friend.user} language={friend.language} status={friend.status}></ChatUser>
         )
     })
 
@@ -103,7 +103,7 @@ const Chat = () => {
                         </Grid>
                     </Grid>
                     <Grid item xs={12} style={{ padding: '10px' }}>
-                        <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth halfHeight />
+                        <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth halfheight="true" />
                     </Grid>
                     <Divider />
                     <List>
