@@ -1,0 +1,13 @@
+.chat {
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+.chats-header {
+  padding-left: 20px;
+}
+
+.messages-container {
+  height: 70vh;
+  overflow-y: scroll;
+}

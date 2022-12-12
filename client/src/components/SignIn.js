@@ -84,6 +84,7 @@ export default function SignIn() {
               label="Remember me"
             />
             <Button
+              href="Chat"
               type="submit"
               fullWidth
               variant="contained"
