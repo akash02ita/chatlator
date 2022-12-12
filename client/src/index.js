@@ -9,11 +9,13 @@ import { BrowserRouter } from "react-router-dom";
 // const root = ReactDOM.createRoot(document.getElementById('root')); // createRoot does not exist in react 17
 
 ReactDOM.render(
-  <React.StrictMode>
+  // removing strict mode to avoid warnings of MUI dialog popups
+  // <React.StrictMode>
     <BrowserRouter>
       <App />
-    </BrowserRouter>,
-  </React.StrictMode>,
+    </BrowserRouter>
+  // </React.StrictMode>
+  ,
   document.getElementById('root')
 );
 

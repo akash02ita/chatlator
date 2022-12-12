@@ -16,6 +16,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from "react-router-dom";
+import slogo from './slogo.png'
 
 function Copyright(props) {
   return (
@@ -31,13 +33,87 @@ function Copyright(props) {
 }
 
 
-
-const theme = createTheme();
+const INITIAL_SETUP_LANGUAGE = "Please  Select  First  languange";
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#002B45',
+      
+    },
+  },
+});
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [userLanguange, setUserLanguage] = useState("Please  Select  First  languange")
+  const [userLanguange, setUserLanguage] = useState(INITIAL_SETUP_LANGUAGE);
+  const [fname, setFname] = useState(null);
+  const [lname, setLname] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+
+  
+  const handleSignUp = () => {
+    console.log("SignUp.js: button clicked");
+    console.log("args are: ", fname, lname, userLanguange, email, password);
+    if (!fname) {
+      alert("first fname!");
+      return;
+    }
+    if (!lname) {
+      alert("first lname!");
+      return;
+    }
+    if (!password) {
+      alert("password!");
+      return;
+    }
+    if (!email) {
+      alert("email!");
+      return;
+    }
+    if (userLanguange === INITIAL_SETUP_LANGUAGE) {
+      alert("select user language!");
+      return;
+    }
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "name": fname + " " + lname,
+        "password": password,
+        "primaryLanguage": userLanguange,
+        "email": email
+      })
+    };
+
+    fetch("users/signup", requestOptions)
+      .then(response => response.json())
+      .then(data => { console.log("Signup.js data is ", data); return data; })
+      .then((data) => {
+      
+        console.log(data);
+        // navigate chat -> 
+        
+          
+        
+        // move to Chat.js if successful
+        if (data["success"]){ // if it's true, successful, 
+          //then parse the data.
+          navigate('../chatting', { state: 
+                                {name : data["user"].name, // data["name"], 
+                                email : data["user"].email, // data["email"],
+                                primaryLanguage : data["user"].primaryLanguage , 
+                                userGuid : data["user"].guid,         
+                                } 
+                                }); // I think this is all I need.  
+        } 
+      });
+
+  }
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -70,10 +146,21 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
+          </Avatar> */}
+          <Box
+        component="img"
+        sx={{
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 233, md: 167 },
+        }}
+        alt="The house from the offer."
+        src={slogo}
+      />
+          <Typography component="h1" variant="h5" sx={{ color: "#FFFFFF", marginTop:4 }}>
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -87,6 +174,8 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={(event) => setFname(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'}}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -97,6 +186,8 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={(event) => setLname(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -107,6 +198,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(event) => setEmail(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -118,6 +211,8 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -127,6 +222,7 @@ export default function SignUp() {
                   disableElevation
                   onClick={handleClick}
                   endIcon={<KeyboardArrowDownIcon />}
+                  sx={{color:'white'}}
                 >
                   {userLanguange}
                 </Button>
@@ -150,19 +246,20 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => handleSignUp()}
             >
               Sign Up
             </Button>
             <Grid container justifyContent="center">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Copyright sx={{ mt: 5, color:'grey' }} />
       </Container>
     </ThemeProvider>
   );
