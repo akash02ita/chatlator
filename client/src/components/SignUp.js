@@ -92,19 +92,17 @@ export default function SignUp() {
         
           
         
+        // move to Chat.js if successful
         if (data["success"]){ // if it's true, successful, 
           //then parse the data.
-          navigate('../Chatting', { state: 
+          navigate('../chatting', { state: 
                                 {name : data["user"].name, // data["name"], 
                                 email : data["user"].email, // data["email"],
                                 primaryLanguage : data["user"].primaryLanguage , 
-                                guid : data["user"].guid,         
+                                userGuid : data["user"].guid,         
                                 } 
                                 }); // I think this is all I need.  
         } 
-       // return "nothing"; // not entirely sure what this is for.
-        // TODO: move to Chat.js if successful
-        //return "nothing";
       });
 
   }
@@ -231,7 +229,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="center">
               <Grid item>
-                <Link href="SignIn" variant="body2">
+                <Link href="signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

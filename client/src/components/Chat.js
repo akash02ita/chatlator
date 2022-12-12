@@ -1,6 +1,6 @@
 // source: https://medium.com/@awaisshaikh94/chat-component-built-with-react-and-material-ui-c2b0d9ccc491
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -19,6 +19,7 @@ import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 import ChatUser from './ChatUser';
 import Message from './Message';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles({
     table: {
@@ -41,29 +42,66 @@ const useStyles = makeStyles({
 });
 
 const Chat = () => {
-    const [friends, setFriends] = useState([
-        {
-            "user": "Afnan",
-            "language": "English",
-            "status": "Online"
-        },
-        {
-            "user": "Shardar",
-            "language": "French",
-            "status": "Offline"
-        },
-        {
-            "user": "Akshay",
-            "language": "Spanish",
-            "status": "Online"
-        }
-    ])
-    const [messages, setMessages] = useState([])
-    const [currentMessage, setCurrentMessage] = useState()
+    // get parameters
+    const {state} = useLocation();
+    const { name, email, primaryLanguage, userGuid } = state; // Read values passed on state
+    console.log("Chat.js begin: ", name, email, primaryLanguage, userGuid);
 
-    let friendsList = friends.map((friend) => {
+    const [historyRooms, setHistoryRooms] = useState([
+        // {
+        //     "user": "Afnan",
+        //     "language": "English",
+        //     "status": "Online"
+        // },
+        // {
+        //     "user": "Shardar",
+        //     "language": "French",
+        //     "status": "Offline"
+        // },
+        // {
+        //     "user": "Akshay",
+        //     "language": "Spanish",
+        //     "status": "Online"
+        // }
+    ])
+    const [messages, setMessages] = useState([]);
+    const [currentMessage, setCurrentMessage] = useState();
+
+    // first time render only
+    useEffect(() => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              "userGuid": userGuid
+            })
+          };
+      
+          fetch("chats/getHistoryRooms", requestOptions)
+            .then(response => response.json())
+            .then(data => { console.log("Chat.js rooms data is ", data); return data; })
+            .then((data) => {
+              if (data["success"]){ // if it's true, successful, 
+                const newFriends = data.rooms.map((room) => {
+                    const previousUserGuid = Object.keys(room.userInfo).filter((e) => e !== userGuid)[0];
+                    return {
+                        "user": room.userInfo[previousUserGuid].name,
+                        "userGuid": previousUserGuid,
+                        "language": room.userInfo[previousUserGuid].primaryLanguage,
+                        "status": "Offline",
+                        "roomGuid": room.guid 
+                    };
+                });
+
+                setHistoryRooms(newFriends);
+              } 
+             // return "nothing"; // not entirely sure what this is for.
+            });
+    }, []);
+
+    let peopleList = historyRooms.map((person) => {
         return (
-            <ChatUser key={friend.user} user={friend.user} language={friend.language} status={friend.status}></ChatUser>
+            <ChatUser key={person.roomGuid} user={person.user} language={person.language} status={person.status}></ChatUser>
         )
     })
 
@@ -94,7 +132,7 @@ const Chat = () => {
             <Grid container component={Paper} className="chat">
                 <Grid item xs={3} className="borderRight500">
                     <List>
-                        <ChatUser user="Nick McLaughlin" language="Japanese" status="Offline"></ChatUser>
+                        <ChatUser user={name} language={primaryLanguage} status="Online"></ChatUser>
                     </List>
                     <Divider />
                     <Grid container>
@@ -107,7 +145,7 @@ const Chat = () => {
                     </Grid>
                     <Divider />
                     <List>
-                        {friendsList}
+                        {peopleList}
                     </List>
                 </Grid>
                 <Grid item xs={9}>

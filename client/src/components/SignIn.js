@@ -63,7 +63,7 @@ export default function SignIn() {
       .then(response => response.json())
       .then(data => { console.log("Signin.js data is ", data); return data; })
       .then((data) => {
-        // TODO: move to Chat.js if successful
+        // move to Chat.js if successful
         // Getting all the stuff, reponse from server
         console.log(data);
         // navigate chat -> 
@@ -72,11 +72,11 @@ export default function SignIn() {
         
         if (data["success"]){ // if it's true, successful, 
           //then parse the data.
-          navigate('../Chatting', { state: 
+          navigate('../chatting', { state: 
                                 {name : data["user"].name, // data["name"], 
                                 email : data["user"].email, // data["email"],
                                 primaryLanguage : data["user"].primaryLanguage , 
-                                guid : data["user"].guid,         
+                                userGuid : data["user"].guid,         
                                 } 
                                 }); // I think this is all I need.  
         } 
@@ -171,7 +171,7 @@ export default function SignIn() {
                 </Link>
               </Grid> */}
               <Grid item>
-                <Link href="SignUp" variant="body2">
+                <Link href="signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

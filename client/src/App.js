@@ -20,9 +20,9 @@ function App() {
       {/* <Chat /> */}
       <Routes>
         <Route path="/" element={ <Welcome/> } />
-        <Route path="SignUp" element={ <SignUp/> } />
-        <Route path="SignIn" element={ <SignIn/> } />
-        <Route path="Chatting" element={ <Chat/> } />
+        <Route path="signup" element={ <SignUp/> } />
+        <Route path="signin" element={ <SignIn/> } />
+        <Route path="chatting" element={ <Chat/> } />
       </Routes>
     </div>
   );
