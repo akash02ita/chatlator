@@ -33,7 +33,14 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#002B45',
+      
+    },
+  },
+});
 
 export default function SignIn() {
   const navigate = useNavigate(); // This is a hook.
@@ -96,7 +103,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline enableColorScheme/>
         <Box
           sx={{
             marginTop: 8,
@@ -124,7 +131,7 @@ export default function SignIn() {
         alt="The house from the offer."
         src={logo}
       />
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{ color: "#FFFFFF", marginTop:4 }} >
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -138,7 +145,8 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               onChange={(event) => setEmail(event.target.value)}
-              />
+              sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
+            />
             <TextField
               margin="normal"
               required
@@ -149,6 +157,8 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               onChange={(event) => setPassword(event.target.value)}
+              sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
+              
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -164,7 +174,12 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            <Grid container sx={{
+            marginTop: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
               {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -175,15 +190,15 @@ export default function SignIn() {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Link href="Chat" variant="body2">
                   {"Bypass signup to chat"}
                 </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright sx={{ mt: 8, mb: 4, color:'grey'}} />
       </Container>
     </ThemeProvider>
   );

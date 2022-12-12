@@ -17,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from "react-router-dom";
+import slogo from './slogo.png'
 
 function Copyright(props) {
   return (
@@ -32,9 +33,15 @@ function Copyright(props) {
 }
 
 
-
-const theme = createTheme();
 const INITIAL_SETUP_LANGUAGE = "Please  Select  First  languange";
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#002B45',
+      
+    },
+  },
+});
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -139,10 +146,21 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
+          </Avatar> */}
+          <Box
+        component="img"
+        sx={{
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 233, md: 167 },
+        }}
+        alt="The house from the offer."
+        src={slogo}
+      />
+          <Typography component="h1" variant="h5" sx={{ color: "#FFFFFF", marginTop:4 }}>
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -157,6 +175,7 @@ export default function SignUp() {
                   label="First Name"
                   autoFocus
                   onChange={(event) => setFname(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'}}}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -168,7 +187,8 @@ export default function SignUp() {
                   name="lastName"
                   autoComplete="family-name"
                   onChange={(event) => setLname(event.target.value)}
-                  />
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -179,7 +199,8 @@ export default function SignUp() {
                   name="email"
                   autoComplete="email"
                   onChange={(event) => setEmail(event.target.value)}
-                  />
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -191,6 +212,7 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                   onChange={(event) => setPassword(event.target.value)}
+                  sx={{ label: { color: 'grey' }, name: { color: 'grey'}, input:{color:'white'} }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -200,6 +222,7 @@ export default function SignUp() {
                   disableElevation
                   onClick={handleClick}
                   endIcon={<KeyboardArrowDownIcon />}
+                  sx={{color:'white'}}
                 >
                   {userLanguange}
                 </Button>
@@ -236,7 +259,7 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Copyright sx={{ mt: 5, color:'grey' }} />
       </Container>
     </ThemeProvider>
   );
