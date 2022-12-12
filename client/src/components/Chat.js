@@ -67,7 +67,7 @@ const Chat = () => {
             .then(data => { console.log("Chat.js rooms data is ", data); return data; })
             .then((data) => {
               if (data["success"]){ // if it's true, successful, 
-                const newFriends = data.rooms.map((room) => {
+                const newRooms = data.rooms.map((room) => {
                     const previousUserGuid = Object.keys(room.userInfo).filter((e) => e !== userGuid)[0];
                     return {
                         "user": room.userInfo[previousUserGuid].name,
@@ -78,14 +78,14 @@ const Chat = () => {
                     };
                 });
 
-                setHistoryRooms(newFriends);
+                setHistoryRooms(newRooms);
               } 
              // return "nothing"; // not entirely sure what this is for.
             });
     }, []);
 
     const handleSetCurrentRoom = (room) => {
-        console.log("going to do stuff", room);
+        console.log("new room value", room);
         setCurrentRoom(room);
         const requestOptions = {
             method: 'POST',
@@ -103,6 +103,7 @@ const Chat = () => {
               if (data["success"]){ // if it's true, successful, 
                 // historyMessages = data.map();
                 setMessages(data.chats);
+                
               } 
              // return "nothing"; // not entirely sure what this is for.
             });
@@ -127,18 +128,51 @@ const Chat = () => {
 
     const sendMessage = () => {
         if (currentMessage && currentMessage.contentOriginal != "") {
-            setMessages([...messages, currentMessage])
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "contentOriginal": currentMessage["contentOriginal"],
+                    "languageOriginal": primaryLanguage,
+                    "languageTranslate": currentRoom.language,
+                    "roomGuid": currentRoom.roomGuid,
+                    "senderGuid": userGuid
+
+                })
+            };
+
+            fetch("chats/sendMessage", requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Chat.js response send data is ", data); return data;
+                })
+                .then((data) => {
+                    if (data["success"]) { // if it's true, successful, 
+                        // Do not manually set message. Rather let the polling function for getting latest message handle this automatically
+                        // setMessages([...messages, currentMessage]);
+                        document.getElementById("typeSomethingField").value = "";
+                        
+                    }
+                    else {
+                        alert("message failed to send!");
+                    }
+                });
         }
     }
 
-    let messagesContent = messages.map((message) => {
-        const side = message.senderGuid === userGuid ? "right" : "left";
-        if (message.guid) {
-            return (
-                <Message key={message.guid} side={side} contentOriginal={message.contentOriginal} contentTranslated={message.contentTranslated} updatedAt={message.updatedAt}></Message>
-            )
-        }
-    })
+    const renderMessages = () => {
+
+        const messagesContent = messages.map((message) => {
+            const side = message.senderGuid === userGuid ? "right" : "left";
+            if (message.guid) {
+                return (
+                    <Message key={message.guid} side={side} contentOriginal={message.contentOriginal} contentTranslated={message.contentTranslated} updatedAt={message.updatedAt}></Message>
+                )
+            }
+        });
+
+        return messagesContent;
+    }
 
     const renderCurrentChatRoom = () => {
         if (!currentRoom) {
@@ -151,12 +185,12 @@ const Chat = () => {
                 <ChatUser user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
                 <Divider />
                 <List className="messages-container">
-                    {messagesContent}
+                    {renderMessages()}
                 </List>
                 <Divider />
                 <Grid container style={{ padding: '20px' }}>
                     <Grid item xs={11}>
-                        <TextField id="outlined-basic-email" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
+                        <TextField id="typeSomethingField" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
                     </Grid>
                     <Grid item xs={1} align="right">
                         <Fab color="primary" aria-label="add" onClick={sendMessage}><SendIcon /></Fab>
