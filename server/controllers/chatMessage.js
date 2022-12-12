@@ -34,6 +34,7 @@ const chatMessagesController = {
             // roomGuid and senderGuid and then feed it to the translate message
             const apiRes = await translate(contentOriginal, {from:LANG_CODES[languageOriginal], to:LANG_CODES[languageTranslate]});
 
+            const contentTranslated = apiRes.text;
             const newMessage = await ChatMessageModel.createChatMessage(contentOriginal, contentTranslated, roomGuid, senderGuid);
             return res.status(200).json({ success: true, message: newMessage });
         } catch(error) {
