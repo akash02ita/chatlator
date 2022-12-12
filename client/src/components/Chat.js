@@ -5,6 +5,7 @@ import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -15,6 +16,41 @@ import ChatUser from './ChatUser';
 import Message from './Message';
 import { useLocation } from 'react-router-dom';
 import '../App.css';
+
+// imports for dialog
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import AddCircleOutlineRoundedIcon from '@material-ui/icons/AddCircleOutlineRounded';
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+    chatSection: {
+        width: '100%',
+        height: '80vh'
+    },
+    headBG: {
+        backgroundColor: '#e0e0e0'
+    },
+    borderRight500: {
+        borderRight: '1px solid #e0e0e0'
+    },
+    messageArea: {
+        height: '70vh',
+        overflowY: 'auto'
+    }
+});
+
+// for dialog
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Chat = () => {
     // get parameters
@@ -30,6 +66,17 @@ const Chat = () => {
     const [mobileRoom, setMobileRoom] = useState(false)
 
     const mobile = useMediaQuery('(max-width:600px)');
+
+    // for popup dialog
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const refreshLatestChat = () => {
         console.log("hello")
@@ -59,7 +106,7 @@ const Chat = () => {
                 }
             });
         */
-        
+
         //currently working: closure issues. 'messages' is closed to empty list unfortunately
         // however this has been fixed by adding dependency in useEffect to achieve same thing without issues
         // according to several test and spam clicks no duplicate issues coming up
@@ -67,9 +114,9 @@ const Chat = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              "roomGuid": currentRoom.roomGuid
+                "roomGuid": currentRoom.roomGuid
             })
-          };
+        };
 
         fetch("chats/pollLatestChat", requestOptions)
             .then(response => response.json())
@@ -84,8 +131,8 @@ const Chat = () => {
                         setMessages([...messages, latestChat]);
                     }
                 }
-            }); 
-        
+            });
+
     }
 
     // first time render only
@@ -232,10 +279,10 @@ const Chat = () => {
 
     const handleEnter = (event) => {
         if (event.key === 'Enter') {
-          sendMessage()
+            sendMessage()
         }
     }
-    
+
     const handleBackClick = () => {
         setMobileRoom(false)
     }
@@ -244,29 +291,33 @@ const Chat = () => {
         if (mobile && mobileRoom) {
             return
         }
-        return (<Grid item xs={3} className="chats-options">
-            <Grid item xs={12} >
-                <ChatUser user={name} language={primaryLanguage} status="Online"></ChatUser>
-            </Grid>
-            <Divider />
-            <Grid container>
+        return (
+            <Grid item xs={3} className="chats-options">
                 <Grid item xs={12} >
-                    <Typography variant="h6" className="chats-header">Chats</Typography>
+                    <ChatUser user={name} language={primaryLanguage} status="Online"></ChatUser>
                 </Grid>
-            </Grid>
-            <Grid item xs={12} style={{ padding: '0px 15px 10px 15px' }}>
-                <TextField
-                    id="outlined-basic-email"
-                    label="Search"
-                    fullWidth
-                    onChange={(event) => { searchUser(event.target.value) }}
-                />
-            </Grid>
-            <Divider />
-            <List>
-                {peopleList}
-            </List>
-        </Grid>)
+                <Divider />
+                <Grid container>
+                    <Grid item xs={12} >
+                        <Typography variant="h6" className="chats-header">Chats</Typography>
+                        <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                            <AddCircleOutlineRoundedIcon variant="outlined" color="primary" />
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12} style={{ padding: '0px 15px 10px 15px' }}>
+                    <TextField
+                        id="outlined-basic-email"
+                        label="Search"
+                        fullWidth
+                        onChange={(event) => { searchUser(event.target.value) }}
+                    />
+                </Grid>
+                <Divider />
+                <List>
+                    {peopleList}
+                </List>
+            </Grid>)
     }
 
     const renderMessages = () => {
@@ -289,7 +340,7 @@ const Chat = () => {
         return (
             <Grid item xs={9} className="chat-room">
                 <ChatUser className="selected-user" mobile={mobile} handleBackClick={handleBackClick} user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
-                <Divider/>
+                <Divider />
                 <List className="messages-container">
                     {renderMessages()}
                 </List>
@@ -309,10 +360,33 @@ const Chat = () => {
     return (
         <div>
             <Grid container component={Paper} className="chat">
-                {renderUsers()}
-                {renderCurrentChatRoom()}
-            </Grid>
-        </div>
+    { renderUsers() }
+    { renderCurrentChatRoom() }
+            </Grid >
+    <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+    >
+        <DialogTitle id="alert-dialog-slide-title">{"Let's search for you a random person..."}</DialogTitle>
+        <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+                TODO: prompt for a select field on which langauge user wants to learn.
+            </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleClose} color="secondary">
+                Go back
+            </Button>
+            <Button onClick={handleClose} color="primary">
+                Search for Random People
+            </Button>
+        </DialogActions>
+    </Dialog>
+        </div >
     );
 }
 
