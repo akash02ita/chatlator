@@ -1,5 +1,19 @@
 import ChatRoomModel from "../models/chatRoom.js";
 
+// For create room the post body should look like this
+// {
+//      "userInfo": {
+//          "<user1Guid>": {
+//              "name": "<User1Name>",
+//              "primaryLanguage": "<user1PrimaryLanguage>"
+//          },
+//          "<user2Guid>": {
+//              "name": "<User2Name>",
+//              "primaryLanguage": "<user2PrimaryLanguage"
+//          }
+//      }
+// }
+
 const chatRoomsController = {
     handleCreateChatRoom: async (req, res) => {
         try {
@@ -20,6 +34,8 @@ const chatRoomsController = {
             return res.status(500).json({ success: false, error: error });
         }
     }
+
+    {}
 };
 
 export default chatRoomsController;
