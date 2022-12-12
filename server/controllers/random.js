@@ -26,24 +26,46 @@ const findMatches = ({primaryLanguage, learnLanguage }) => {
 // This part here, is the only one building a response. Two const above support this.
 const randomController = {
     handleRandomUsersSearch: async (req, res) => { // why async? does it need to be?
-        // When we get a user, it does not come with learnLanguage in the "user" object.
-        const { email, name, primaryLanguage, learnLanguage } = req.body;
+        try {
+            // at the moment no validation if user exists in database
 
-        if (!(primaryLanguage in liveSearchData)) {
-            liveSearchData[primaryLanguage] = {};
+            // When we get a user, it does not come with learnLanguage in the "user" object.
+            const { email, name, primaryLanguage, learnLanguage } = req.body;
+            
+            if (!(primaryLanguage in liveSearchData)) {
+                liveSearchData[primaryLanguage] = {};
+            }
+            
+            updateLiveData({ email, name, primaryLanguage, learnLanguage });
+            
+            
+            const matches = findMatches({ primaryLanguage, learnLanguage });
+            const pairuprequests = livePairRequestData[email] ? livePairRequestData[email] : {};
+            
+            return res.status(200).json({ "matches": matches, "pairuprequests": pairuprequests});
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error });
         }
-
-        updateLiveData({ email, name, primaryLanguage, learnLanguage });
-
-
-        const matches = findMatches({ primaryLanguage, learnLanguage });
-        const pairuprequests = livePairRequestData[email] ? livePairRequestData[email] : {};
-
-        return res.status(200).json({ "matches": matches, "pairuprequests": pairuprequests});
     },
 
     handlePairUpRequest: async (req, res) => {
+        try {
+            const { email, name, primaryLanguage, learnLanguage, otherUserEmail } = req.body;
 
+            // at the moment no validation if user exists on databse
+            // at the moment no validation if otherUser and current user match in languages they want to learn
+
+            if (!livePairRequestData[otherUserEmail]) {
+                livePairRequestData[otherUserEmail] = {};
+            }
+            
+            livePairRequestData[otherUserEmail][email] = name;
+
+            return res.status(200).json({ success: true, message: "We have added your pair request. Kindly wait for other user to accept yours"});
+
+        } catch (error) {
+            return res.status(500).json({ success: false, error: error });
+        }
     },
 
     handlePairUpConfirmation: async (req, res) => {
