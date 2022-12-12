@@ -48,6 +48,7 @@ const Chat = () => {
     console.log("Chat.js begin: ", name, email, primaryLanguage, userGuid);
 
     const [historyRooms, setHistoryRooms] = useState([]);
+    const [storedFriends, setStoredFriends] = useState([])
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState();
     const [currentRoom, setCurrentRoom] = useState(null);
@@ -78,7 +79,8 @@ const Chat = () => {
                     };
                 });
 
-                setHistoryRooms(newRooms);
+                setStoredFriends(newRooms)
+                setHistoryRooms(newRooms)
               } 
              // return "nothing"; // not entirely sure what this is for.
             });
@@ -116,6 +118,21 @@ const Chat = () => {
             </div>
         )
     })
+
+    const searchUser = (text) => {
+        if (text == "") {
+            setHistoryRooms(storedFriends)
+        }
+        else {
+            var matchingUsers = []
+            storedFriends.forEach(function (room) {
+                if (room.user.toLowerCase().includes(text)) {
+                    matchingUsers.push(room)
+                }
+            });
+            setHistoryRooms(matchingUsers)
+        }
+    }
 
     const newMessage = (m) => {
         setCurrentMessage({
@@ -214,7 +231,7 @@ const Chat = () => {
                         </Grid>
                     </Grid>
                     <Grid item xs={12} style={{ padding: '10px' }}>
-                        <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth halfheight="true" />
+                        <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth halfheight="true" onChange={(event) => { searchUser(event.target.value) }} />
                     </Grid>
                     <Divider />
                     <List>
