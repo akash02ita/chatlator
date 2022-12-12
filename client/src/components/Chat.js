@@ -353,7 +353,7 @@ const Chat = () => {
     >
         <DialogTitle id="alert-dialog-slide-title">{"Let's search for you a random person..."}</DialogTitle>
         <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
+            <DialogContentText id="alert-dialog-slide-description" className="random-popup">
                 TODO: prompt for a select field on which langauge user wants to learn.
             </DialogContentText>
         </DialogContent>
