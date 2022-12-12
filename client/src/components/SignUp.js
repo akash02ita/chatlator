@@ -33,11 +33,63 @@ function Copyright(props) {
 
 
 const theme = createTheme();
+const INITIAL_SETUP_LANGUAGE = "Please  Select  First  languange";
 
 export default function SignUp() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [userLanguange, setUserLanguage] = useState("Please  Select  First  languange")
+  const [userLanguange, setUserLanguage] = useState(INITIAL_SETUP_LANGUAGE);
+  const [fname, setFname] = useState(null);
+  const [lname, setLname] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+
+  
+  const handleSignUp = () => {
+    console.log("SignUp.js: button clicked");
+    console.log("args are: ", fname, lname, userLanguange, email, password);
+    if (!fname) {
+      alert("first fname!");
+      return;
+    }
+    if (!lname) {
+      alert("first lname!");
+      return;
+    }
+    if (!password) {
+      alert("password!");
+      return;
+    }
+    if (!email) {
+      alert("email!");
+      return;
+    }
+    if (userLanguange === INITIAL_SETUP_LANGUAGE) {
+      alert("select user language!");
+      return;
+    }
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "name": fname + " " + lname,
+        "password": password,
+        "primaryLanguage": userLanguange,
+        "email": email
+      })
+    };
+
+    fetch("users/signup", requestOptions)
+      .then(response => response.json())
+      .then(data => { console.log("Signup.js data is ", data); return data; })
+      .then((data) => {
+        // TODO: move to Chat.js if successful
+        return "nothing";
+      });
+
+  }
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -87,6 +139,7 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={(event) => setFname(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -97,7 +150,8 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
-                />
+                  onChange={(event) => setLname(event.target.value)}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -107,7 +161,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                />
+                  onChange={(event) => setEmail(event.target.value)}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -118,6 +173,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(event) => setPassword(event.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -150,6 +206,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => handleSignUp()}
             >
               Sign Up
             </Button>

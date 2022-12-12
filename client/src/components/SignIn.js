@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import logo from './logo.jpg'
+import { useState } from 'react'
 
 function Copyright(props) {
   return (
@@ -32,6 +33,37 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+
+  const handleSignIn = () => {
+    if (!email) {
+      alert("email!");
+      return;
+    }
+    if (!password) {
+      alert("password!");
+      return;
+    }
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        "email": email,
+        "password": password
+      })
+    };
+
+    fetch("users/login", requestOptions)
+      .then(response => response.json())
+      .then(data => { console.log("Signin.js data is ", data); return data; })
+      .then((data) => {
+        // TODO: move to Chat.js if successful
+        return "nothing";
+      });
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -85,7 +117,8 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-            />
+              onChange={(event) => setEmail(event.target.value)}
+              />
             <TextField
               margin="normal"
               required
@@ -95,17 +128,19 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(event) => setPassword(event.target.value)}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
             <Button
-              href="Chat"
+              // href="Chat" // no href rather sign in and handleSignIn will navigation to Chat
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => handleSignIn()}
             >
               Sign In
             </Button>
