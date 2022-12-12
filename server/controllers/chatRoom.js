@@ -34,8 +34,6 @@ const chatRoomsController = {
             return res.status(500).json({ success: false, error: error });
         }
     }
-
-    {}
 };
 
 export default chatRoomsController;
