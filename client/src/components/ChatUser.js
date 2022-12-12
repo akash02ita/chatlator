@@ -25,7 +25,7 @@ export default function ChatUser(props) {
   }
 
   return (
-    <ListItem button key={props.roomGuid}>
+    <ListItem button key={props.roomGuid} className={props.className} >
       <ListItemIcon>
           <Avatar {...getInitials(props.user)} />
       </ListItemIcon>

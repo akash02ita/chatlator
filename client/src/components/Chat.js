@@ -2,48 +2,23 @@
 
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import { Button } from '@mui/material';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 import ChatUser from './ChatUser';
 import Message from './Message';
 import { useLocation } from 'react-router-dom';
-
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-    chatSection: {
-        width: '100%',
-        height: '80vh'
-    },
-    headBG: {
-        backgroundColor: '#e0e0e0'
-    },
-    borderRight500: {
-        borderRight: '1px solid #e0e0e0'
-    },
-    messageArea: {
-        height: '70vh',
-        overflowY: 'auto'
-    }
-});
+import '../App.css';
 
 const Chat = () => {
     // get parameters
-    const {state} = useLocation();
+    const { state } = useLocation();
     const { name, email, primaryLanguage, userGuid } = state; // Read values passed on state
     console.log("Chat.js begin: ", name, email, primaryLanguage, userGuid);
 
@@ -52,6 +27,9 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState();
     const [currentRoom, setCurrentRoom] = useState(null);
+    const [mobileRoom, setMobileRoom] = useState(false)
+
+    const mobile = useMediaQuery('(max-width:600px)');
 
     const refreshLatestChat = () => {
         console.log("hello")
@@ -138,8 +116,8 @@ const Chat = () => {
 
                     setStoredFriends(newRooms)
                     setHistoryRooms(newRooms)
-                } 
-             // return "nothing"; // not entirely sure what this is for.
+                }
+                // return "nothing"; // not entirely sure what this is for.
             });
 
     }, []);
@@ -165,21 +143,24 @@ const Chat = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              "roomGuid": room.roomGuid
+                "roomGuid": room.roomGuid
             })
-          };
-      
-          fetch("chats/getHistoryChats", requestOptions)
+        };
+
+        fetch("chats/getHistoryChats", requestOptions)
             .then(response => response.json())
             .then(data => {
-                 console.log("Chat.js history chats data is ", data); return data; })
+                console.log("Chat.js history chats data is ", data); return data;
+            })
             .then((data) => {
-              if (data["success"]){ // if it's true, successful, 
-                // historyMessages = data.map();
-                setMessages(data.chats);
-                
-              } 
-             // return "nothing"; // not entirely sure what this is for.
+                if (data["success"]) { // if it's true, successful, 
+                    // historyMessages = data.map();
+                    setMessages(data.chats);
+                    if (mobile) {
+                        setMobileRoom(true)
+                    }
+                }
+                // return "nothing"; // not entirely sure what this is for.
             });
     }
 
@@ -240,7 +221,7 @@ const Chat = () => {
                         // Do not manually set message. Rather let the polling function for getting latest message handle this automatically
                         // setMessages([...messages, currentMessage]);
                         document.getElementById("typeSomethingField").value = "";
-                        
+
                     }
                     else {
                         alert("message failed to send!");
@@ -249,8 +230,36 @@ const Chat = () => {
         }
     }
 
-    const renderMessages = () => {
+    const renderUsers = () => {
+        if (mobile && mobileRoom) {
+            return
+        }
+        return (<Grid item xs={3} className="chats-options">
+            <Grid item xs={12} >
+                <ChatUser user={name} language={primaryLanguage} status="Online"></ChatUser>
+            </Grid>
+            <Divider />
+            <Grid container>
+                <Grid item xs={12} >
+                    <Typography variant="h6" className="chats-header">Chats</Typography>
+                </Grid>
+            </Grid>
+            <Grid item xs={12} style={{ padding: '0px 15px 10px 15px' }}>
+                <TextField
+                    id="outlined-basic-email"
+                    label="Search"
+                    fullWidth
+                    onChange={(event) => { searchUser(event.target.value) }}
+                />
+            </Grid>
+            <Divider />
+            <List>
+                {peopleList}
+            </List>
+        </Grid>)
+    }
 
+    const renderMessages = () => {
         const messagesContent = messages.map((message) => {
             const side = message.senderGuid === userGuid ? "right" : "left";
             if (message.guid) {
@@ -264,20 +273,18 @@ const Chat = () => {
     }
 
     const renderCurrentChatRoom = () => {
-        if (!currentRoom) {
+        if (!currentRoom || (mobile && !mobileRoom)) {
             return;
         }
-        console.log("currentRoom.primaryLanguage")
         return (
-
-            <Grid item xs={9}>
-                <ChatUser user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
+            <Grid item xs={9} className="chat-room">
+                <ChatUser className="selected-user" user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
                 <Divider />
                 <List className="messages-container">
                     {renderMessages()}
                 </List>
                 <Divider />
-                <Grid container style={{ padding: '20px' }}>
+                <Grid container className="typed-message-container">
                     <Grid item xs={11}>
                         <TextField id="typeSomethingField" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
                     </Grid>
@@ -292,24 +299,7 @@ const Chat = () => {
     return (
         <div>
             <Grid container component={Paper} className="chat">
-                <Grid item xs={3} className="borderRight500">
-                    <List>
-                        <ChatUser user={name} language={primaryLanguage} status="Online"></ChatUser>
-                    </List>
-                    <Divider />
-                    <Grid container>
-                        <Grid item xs={12} >
-                            <Typography variant="h6" className="chats-header">Chats</Typography>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={12} style={{ padding: '10px' }}>
-                        <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth halfheight="true" onChange={(event) => { searchUser(event.target.value) }} />
-                    </Grid>
-                    <Divider />
-                    <List>
-                        {peopleList}
-                    </List>
-                </Grid>
+                {renderUsers()}
                 {renderCurrentChatRoom()}
             </Grid>
         </div>
