@@ -42,7 +42,7 @@ const randomController = {
             const matches = findMatches({ primaryLanguage, learnLanguage });
             const pairuprequests = livePairRequestData[email] ? livePairRequestData[email] : {};
             
-            return res.status(200).json({ "matches": matches, "pairuprequests": pairuprequests});
+            return res.status(200).json({success: true, "matches": matches, "pairuprequests": pairuprequests});
         } catch (error) {
             return res.status(500).json({ success: false, error: error });
         }
