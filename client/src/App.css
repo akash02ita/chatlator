@@ -36,6 +36,10 @@
   color: white !important;
 }
 
+.back-button {
+  color: white;
+}
+
 .message {
   width: fit-content;
   max-width: 50%;

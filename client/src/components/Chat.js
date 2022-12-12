@@ -230,6 +230,16 @@ const Chat = () => {
         }
     }
 
+    const handleEnter = (event) => {
+        if (event.key === 'Enter') {
+          sendMessage()
+        }
+    }
+    
+    const handleBackClick = () => {
+        setMobileRoom(false)
+    }
+
     const renderUsers = () => {
         if (mobile && mobileRoom) {
             return
@@ -278,15 +288,15 @@ const Chat = () => {
         }
         return (
             <Grid item xs={9} className="chat-room">
-                <ChatUser className="selected-user" user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
-                <Divider />
+                <ChatUser className="selected-user" mobile={mobile} handleBackClick={handleBackClick} user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
+                <Divider/>
                 <List className="messages-container">
                     {renderMessages()}
                 </List>
                 <Divider />
                 <Grid container className="typed-message-container">
                     <Grid item xs={11}>
-                        <TextField id="typeSomethingField" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
+                        <TextField id="typeSomethingField" label="Type Something" fullWidth onKeyDown={handleEnter} onChange={(event) => { newMessage(event.target.value) }} />
                     </Grid>
                     <Grid item xs={1} align="right">
                         <Fab color="primary" aria-label="add" onClick={sendMessage}><SendIcon /></Fab>
