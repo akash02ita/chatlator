@@ -111,7 +111,7 @@ export default function SignUp() {
                                 }); // I think this is all I need.  
         }
         if(!data["success"]){
-          alert("There's a problem with your Sign up Information. \n Please Try Again.")
+          alert("There's a problem with your Sign up Information. \n Please Try Again.");
         }
         
 

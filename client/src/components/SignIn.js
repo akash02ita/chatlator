@@ -86,6 +86,9 @@ export default function SignIn() {
                                 userGuid : data["user"].guid,         
                                 } 
                                 }); // I think this is all I need.  
+        }
+        if(!data["success"]){
+          alert("There's a problem with your Sign In Information. \n Please Try Again.");
         } 
        // return "nothing"; // not entirely sure what this is for.
       });
