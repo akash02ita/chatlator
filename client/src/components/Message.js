@@ -3,7 +3,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 export default function Message(props) {
-  console.log(props)
+  // console.log(props)
   return (
     <ListItem>
       <Grid container>

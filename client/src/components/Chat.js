@@ -51,6 +51,69 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState();
     const [currentRoom, setCurrentRoom] = useState(null);
+    const [currentLatestChatId, setCurrentLatestChatId] = useState(null);
+
+    const refreshLatestChat = () => {
+        console.log("hello")
+        // skip when nothing yet
+        if (!currentRoom || !currentRoom.roomGuid) {
+            console.log("failed currentRoom is ", currentRoom);
+            return;
+        }
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "roomGuid": currentRoom.roomGuid
+            })
+        };
+
+        fetch("chats/getHistoryChats", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Chat.js history chats data is ", data); return data;
+            })
+            .then((data) => {
+                if (data["success"]) { // if it's true, successful, 
+                    setMessages(data.chats);
+                }
+            });
+        
+        /* currently not working: closure issues. 'messages' is closed to empty list unfortunately
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              "roomGuid": currentRoom.roomGuid
+            })
+          };
+
+          let backupGuid = currentRoom.roomGuid;
+          fetch("chats/pollLatestChat", requestOptions)
+            .then(response => response.json())
+            .then(data => { console.log("Chat.js update latest chat data is ", data); return data; })
+            .then((data) => {
+              if (data["success"]){ // if it's true, successful, 
+                const latestChat = data["chats"]; 
+                console.log("currentLatestChatId is ",currentLatestChatId);
+                if (latestChat) {
+                    if (latestChat.guid !== currentLatestChatId) {
+                        console.log("Difference in guid detected for latest chat...");
+                        if (backupGuid == currentRoom.roomGuid) {
+                            console.log("Latest chat applying new changes...")
+                            setCurrentLatestChatId(latestChat.guid);
+                            setMessages([...messages, latestChat]);
+                        } else {
+                            setCurrentLatestChatId(null);
+                        }
+                    }
+                }
+              } 
+             // return "nothing"; // not entirely sure what this is for.
+            }); 
+        */
+    }
 
     // first time render only
     useEffect(() => {
@@ -82,10 +145,22 @@ const Chat = () => {
               } 
              // return "nothing"; // not entirely sure what this is for.
             });
-    }, []);
+
+        }, []);
+        
+        useEffect(() => {
+        if (currentRoom) {
+            // keep polling ever ms milliseconds
+            const ms = 500;
+            const idinterval = setInterval(refreshLatestChat, ms);
+            
+            // clearinterval will run once component unmounts
+            return () => clearInterval(idinterval);
+        }
+    }, [currentRoom]);
 
     const handleSetCurrentRoom = (room) => {
-        console.log("new room value", room);
+        // console.log("new room value", room);
         setCurrentRoom(room);
         const requestOptions = {
             method: 'POST',
