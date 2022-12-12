@@ -55,6 +55,7 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
+          {/* <Avatar alt="Remy Sharp" src="/images/logo.jpg" /> */}
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
