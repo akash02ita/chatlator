@@ -47,25 +47,10 @@ const Chat = () => {
     const { name, email, primaryLanguage, userGuid } = state; // Read values passed on state
     console.log("Chat.js begin: ", name, email, primaryLanguage, userGuid);
 
-    const [historyRooms, setHistoryRooms] = useState([
-        // {
-        //     "user": "Afnan",
-        //     "language": "English",
-        //     "status": "Online"
-        // },
-        // {
-        //     "user": "Shardar",
-        //     "language": "French",
-        //     "status": "Offline"
-        // },
-        // {
-        //     "user": "Akshay",
-        //     "language": "Spanish",
-        //     "status": "Online"
-        // }
-    ])
+    const [historyRooms, setHistoryRooms] = useState([]);
     const [messages, setMessages] = useState([]);
     const [currentMessage, setCurrentMessage] = useState();
+    const [currentRoom, setCurrentRoom] = useState(null);
 
     // first time render only
     useEffect(() => {
@@ -99,9 +84,15 @@ const Chat = () => {
             });
     }, []);
 
-    let peopleList = historyRooms.map((person) => {
+    const handleSetCurrentRoom = (room) => {
+        setCurrentRoom(room);
+    }
+
+    let peopleList = historyRooms.map((room) => {
         return (
-            <ChatUser key={person.roomGuid} user={person.user} language={person.language} status={person.status}></ChatUser>
+            <div key={room.roomGuid} onClick={() => handleSetCurrentRoom(room)}>
+                <ChatUser key={room.roomGuid} user={room.user} language={room.language} status={room.status}></ChatUser>
+            </div>
         )
     })
 
@@ -126,6 +117,31 @@ const Chat = () => {
         )
     })
 
+    const renderCurrentChatRoom = () => {
+        if (!currentRoom) {
+            return;
+        }
+        console.log("currentRoom.primaryLanguage")
+        return (
+
+            <Grid item xs={9}>
+                <ChatUser user={currentRoom.user} language={currentRoom.language} status="Online"></ChatUser>
+                <Divider />
+                <List className="messages-container">
+                    {messagesContent}
+                </List>
+                <Divider />
+                <Grid container style={{ padding: '20px' }}>
+                    <Grid item xs={11}>
+                        <TextField id="outlined-basic-email" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
+                    </Grid>
+                    <Grid item xs={1} align="right">
+                        <Fab color="primary" aria-label="add" onClick={sendMessage}><SendIcon /></Fab>
+                    </Grid>
+                </Grid>
+            </Grid>
+        );
+    }
 
     return (
         <div>
@@ -148,22 +164,7 @@ const Chat = () => {
                         {peopleList}
                     </List>
                 </Grid>
-                <Grid item xs={9}>
-                    <ChatUser user="Afnan" language="English" status="Online"></ChatUser>
-                    <Divider />
-                    <List className="messages-container">
-                        {messagesContent}
-                    </List>
-                    <Divider />
-                    <Grid container style={{ padding: '20px' }}>
-                        <Grid item xs={11}>
-                            <TextField id="outlined-basic-email" label="Type Something" fullWidth onChange={(event) => { newMessage(event.target.value) }} />
-                        </Grid>
-                        <Grid item xs={1} align="right">
-                            <Fab color="primary" aria-label="add" onClick={sendMessage}><SendIcon /></Fab>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                {renderCurrentChatRoom()}
             </Grid>
         </div>
     );

@@ -25,12 +25,12 @@ export default function ChatUser(props) {
   }
 
   return (
-    <ListItem button key={props.user}>
+    <ListItem button key={props.roomGuid}>
       <ListItemIcon>
           <Avatar {...getInitials(props.user)} />
       </ListItemIcon>
       <div>
-        <ListItemText primary={props.user}>Remy Sharp</ListItemText>
+        <ListItemText primary={props.user}></ListItemText>
         <ListItemText secondary={props.language}></ListItemText>
       </div>
       <ListItemText secondary={props.status} align="right"></ListItemText>
