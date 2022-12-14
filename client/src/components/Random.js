@@ -57,7 +57,7 @@ const Random = () => {
     useEffect( () => {
         const intervalid = setInterval(() => {
             refreshLiveData();
-        }, 5000);
+        }, 500);
 
         return () => clearInterval(intervalid);
     }, []);
