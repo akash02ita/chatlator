@@ -82,3 +82,20 @@
 .random-popup {
   color: black !important
 }
+
+.random-users {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 30vh auto;
+}
+
+.random-user {
+  width: fit-content;
+  background-color: #002B45 !important;
+}
+
+.random-user-button {
+  color: white !important;
+}

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 // for dialogs popup
 import Button from '@material-ui/core/Button';
+import Card from '@mui/material/Card';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -252,7 +253,6 @@ const Random = () => {
                 </Button>
             </DialogActions>
         </Dialog>
-        // <div></div>
         );
 
     }
@@ -262,21 +262,24 @@ const Random = () => {
             console.log("rendering", ruemail, runame);
             return (
                 <div key={ruemail} onClick={() => sendPairUpRequest(ruemail, runame)}>
-                    <button>{runame}</button>
+                    <Button className='random-user-button'>{runame}</Button>
                 </div>
             );
         });
-        return renderedRandomUsers;
+        return (
+            <Card className='random-user'>
+                {renderedRandomUsers}
+            </Card>
+        )
     }
 
     return (
-        <div>
-            <div>hello</div>
-            {renderRandomUsers()};
-            {renderDialogPairUp()};
+        <div className='random-users'>
+            <h2>Select user to chat with in {learnLanguage}:</h2>
+            {renderRandomUsers()}
+            {renderDialogPairUp()}
         </div>
     );
-
 }
 
 export default Random;
