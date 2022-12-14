@@ -59,18 +59,19 @@ const randomController = {
                 livePairRequestData[otherUserEmail] = {};
             }
 
-            livePairRequestData[otherUserEmail][email] = name;
-
+            
             if (!livePairRequestStatusData[email]) {
                 livePairRequestStatusData[email] = {};
             }
-
+            
             // do not allow user to send another pair request, whether waiting or declined
-            if (!livePairRequestStatusData[email][otherUserEmail]) {
+            if (!livePairRequestStatusData[email][otherUserEmail] || livePairRequestStatusData[email][otherUserEmail] === 'accepted') { // also also to pair up again if were accepted in the past time (for example, they reconnect, so thats why)
+                livePairRequestData[otherUserEmail][email] = name;
+
                 livePairRequestStatusData[email][otherUserEmail] = "waiting";
             }
-
-            return res.status(200).json({ success: true, message: "We have added your pair request. Kindly wait for other user to accept yours" });
+            
+            return res.status(200).json({ success: true, message: "You were already rejected. You cannot pair up again." });
 
         } catch (error) {
             return res.status(500).json({ success: false, error: error });
