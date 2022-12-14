@@ -37,7 +37,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const Chat = () => {
     // get parameters
     const { state } = useLocation();
-    const { name, email, primaryLanguage, userGuid } = state; // Read values passed on state
+    const { name, email, primaryLanguage, userGuid, beginRoomGuid } = state; // Read values passed on state
     console.log("Chat.js begin: ", name, email, primaryLanguage, userGuid);
 
     const [historyRooms, setHistoryRooms] = useState([]);
@@ -145,6 +145,20 @@ const Chat = () => {
 
                     setStoredFriends(newRooms)
                     setHistoryRooms(newRooms)
+                    
+                    // set the first room if there is
+                    if (beginRoomGuid) {
+                        console.log("begin room guid is ", beginRoomGuid);
+                        const targetRoom = newRooms.filter((r) => r.roomGuid === beginRoomGuid);
+                        console.log("targetroom is ", targetRoom);
+                        if (targetRoom.length) {
+                            setCurrentRoom(targetRoom[0]); // there should be exactly one element in array
+                        }
+                    }
+                    else if (newRooms.length) {
+                        // set the first room automatically
+                        setCurrentRoom(newRooms[0]);
+                    }
                 }
                 // return "nothing"; // not entirely sure what this is for.
             });

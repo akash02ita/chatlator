@@ -15,6 +15,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Random = () => {
+    const navigate = useNavigate();
+
     // get parameters
     const { state } = useLocation();
     const { name, email, primaryLanguage, userGuid, learnLanguage } = state; // Read values passed on state
@@ -26,33 +28,35 @@ const Random = () => {
     const [sentPairRequestEmail, setSentPairRequestEmail] = useState(null);
 
     const refreshLiveData = () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "name": name,
+                // "email": email,
+                "email": userGuid,
+                "primaryLanguage": primaryLanguage,
+                "learnLanguage": learnLanguage
+            })
+        };
 
+        fetch("/random/search", requestOptions)
+            .then(response => response.json())
+            .then(data => { console.log("Random.js random live data is ", data); return data; })
+            .then((data) => {
+                if (data["success"]) { // if it's true, successful, 
+                    setRandomUsers(data["matches"]);
+                    setPairUsers(data["pairuprequests"]);
+                }
+            });
     }
 
     useEffect( () => {
-        setInterval(() => {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    "name": name,
-                    // "email": email,
-                    "email": userGuid,
-                    "primaryLanguage": primaryLanguage,
-                    "learnLanguage": learnLanguage 
-                })
-            };
-
-            fetch("/random/search", requestOptions)
-                .then(response => response.json())
-                .then(data => { console.log("Random.js random live data is ", data); return data; })
-                .then((data) => {
-                    if (data["success"]) { // if it's true, successful, 
-                        setRandomUsers(data["matches"]);
-                        setPairUsers(data["pairuprequests"]);
-                    }
-                });
+        const intervalid = setInterval(() => {
+            refreshLiveData();
         }, 5000);
+
+        return () => clearInterval(intervalid);
     }, []);
 
     const sendPairUpRequest = (toEmail, toName) => {
@@ -87,10 +91,9 @@ const Random = () => {
     }
 
     const handleProceedChatting = (otherUserEmail, otherUserName) => {
-        // TODO: create room
-        // TODO: go to chat.js
         const userInfo = {};
-        userInfo[email] = {"name": name, "primaryLanguage": primaryLanguage};
+        // userInfo[email] = {"name": name, "primaryLanguage": primaryLanguage};
+        userInfo[userGuid] = {"name": name, "primaryLanguage": primaryLanguage};
         userInfo[otherUserEmail] = {"name": otherUserName, "primaryLanguage": learnLanguage};
 
         const requestOptions = {
@@ -107,6 +110,17 @@ const Random = () => {
             .then((data) => {
                 if (data["success"]) { // if it's true, successful,
                     console.log("successful creation of chat room");
+                    navigate("../chatting", {
+                        state:
+                        {
+                            name: name,
+                            email: email,
+                            primaryLanguage: primaryLanguage,
+                            userGuid: userGuid,
+                            learnLanguage: learnLanguage,
+                            beginRoomGuid: data.room.guid
+                        }
+                    });
                 } else {
                     alert("failed creating chat room!");
                 }
