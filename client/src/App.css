@@ -8,6 +8,11 @@
   color: white;
 }
 
+.chats-add {
+  display: flex;
+  justify-content: space-between;
+}
+
 .chats-header {
   padding-left: 20px;
 }

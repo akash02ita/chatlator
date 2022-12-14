@@ -294,7 +294,7 @@ const Chat = () => {
                 </Grid>
                 <Divider />
                 <Grid container>
-                    <Grid item xs={12} >
+                    <Grid className="chats-add" item xs={12} >
                         <Typography variant="h6" className="chats-header">Chats</Typography>
                         <Button variant="outlined" color="primary" onClick={handleClickOpen}>
                             <AddCircleOutlineRoundedIcon variant="outlined" color="primary" />
