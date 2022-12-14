@@ -85,9 +85,55 @@ const Random = () => {
             });
     }
 
+    useEffect(() => {
+        if (!sentPairRequestEmail) return;
+        const intervalid = setInterval(() => receivePairUpRequestStatus(), 2000);
+        return () => clearInterval(intervalid);
+    }, [sentPairRequestEmail]);
+
     const receivePairUpRequestStatus = () => {
+        if (!sentPairRequestEmail) return;
         // keep polling fetch api random/receive/pairStatus
-        
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "name": name,
+                // "email": email,
+                "email": userGuid,
+                "primaryLanguage": primaryLanguage,
+                "learnLanguage": learnLanguage,
+                "otherUserEmail": sentPairRequestEmail
+            })
+        };
+
+        fetch("/random/receive/pairStatus", requestOptions)
+            .then(response => response.json())
+            .then(data => { console.log("Random.js pairup status data is ", data); return data; })
+            .then((data) => {
+                if (data["success"]) { // if it's true, successful,
+                    // handleProceedChatting: createRoom and then navigate to Chat.js if confirmation was true 
+                    const status = data.status;
+                    if (status === 'accepted') {
+                        alert("Successfully you got accepted!");
+                        navigate("../chatting", {
+                            state:
+                            {
+                                name: name,
+                                email: email,
+                                primaryLanguage: primaryLanguage,
+                                userGuid: userGuid,
+                                learnLanguage: learnLanguage,
+                                // beginRoomGuid: data.room.guid
+                            }
+                        });
+                    }
+                    else if (status === 'declined') {
+                        setSentPairRequest(false);
+                        sentPairRequestEmail(null);
+                    }
+                }
+            });   
     }
 
     const handleProceedChatting = (otherUserEmail, otherUserName) => {
@@ -162,7 +208,7 @@ const Random = () => {
 
     const renderDialogPairUp = () => {
         // check i sent a pair request
-        if (sentPairRequest) {
+        if (sentPairRequest && sentPairRequestEmail) {
             
         }
         
