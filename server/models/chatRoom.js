@@ -26,7 +26,10 @@ chatRoomSchema.statics.createChatRoom = async function (userInfo) {
   try {
     // if chat room already exists simply return the same room
     // technically should only check the object.keys(userInfo) being present and ignore other fields, but for now this should also work
-    const existingChatRoom = await this.findOne({userInfo: userInfo});
+    const userGuids = Object.keys(userInfo);
+    // find the room matching both users as key (otherwise may return wrong room, possibly)
+    const existingChatRoom = await this.findOne({ [`userInfo.${userGuids[0]}`]: { $exists: true }, [`userInfo.${userGuids[1]}`]: { $exists: true } });
+    
     console.log("Existing chat room is ", existingChatRoom);
     if (existingChatRoom) return existingChatRoom;
 
