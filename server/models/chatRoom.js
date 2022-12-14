@@ -24,6 +24,12 @@ const chatRoomSchema = new mongoose.Schema(
 // The statics.
 chatRoomSchema.statics.createChatRoom = async function (userInfo) {
   try {
+    // if chat room already exists simply return the same room
+    // technically should only check the object.keys(userInfo) being present and ignore other fields, but for now this should also work
+    const existingChatRoom = await this.findOne({userInfo: userInfo});
+    console.log("Existing chat room is ", existingChatRoom);
+    if (existingChatRoom) return existingChatRoom;
+
     const chatRoom = await this.create({ userInfo });
     return chatRoom
   } catch (error) {
