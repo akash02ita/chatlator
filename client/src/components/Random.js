@@ -23,9 +23,12 @@ const Random = () => {
     console.log("Random.js begin: ", name, email, primaryLanguage, userGuid, learnLanguage);
 
     const [randomUsers, setRandomUsers] = useState([]); // random online users
+
+    // if user receiving request to pair up
     const [pairUsers, setPairUsers] = useState({}); // users who want to pair up to me
-    const [sentPairRequest, setSentPairRequest] = useState(false);
-    const [sentPairRequestEmail, setSentPairRequestEmail] = useState(null);
+
+    // if user sending request to pair up
+    const [[sentPairRequest, sentPairRequestEmail, sentPairRequestName], setSentPairRequestTrack] = useState([false, null , null])
 
     const refreshLiveData = () => {
         const requestOptions = {
@@ -79,8 +82,7 @@ const Random = () => {
             .then(data => { console.log("Random.js pairup send data is ", data); return data; })
             .then((data) => {
                 if (data["success"]) { // if it's true, successful, 
-                    setSentPairRequest(true);
-                    setSentPairRequestEmail(toEmail);
+                    setSentPairRequestTrack([ true, toEmail, toName]);
                 }
             });
     }
@@ -92,7 +94,7 @@ const Random = () => {
     }, [sentPairRequestEmail]);
 
     const receivePairUpRequestStatus = () => {
-        if (!sentPairRequestEmail) return;
+        if (!sentPairRequestEmail || !sentPairRequestName) return;
         // keep polling fetch api random/receive/pairStatus
         const requestOptions = {
             method: 'POST',
@@ -107,6 +109,7 @@ const Random = () => {
             })
         };
 
+        console.log("going to send request!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         fetch("/random/receive/pairStatus", requestOptions)
             .then(response => response.json())
             .then(data => { console.log("Random.js pairup status data is ", data); return data; })
@@ -115,28 +118,18 @@ const Random = () => {
                     // handleProceedChatting: createRoom and then navigate to Chat.js if confirmation was true 
                     const status = data.status;
                     if (status === 'accepted') {
-                        alert("Successfully you got accepted!");
-                        navigate("../chatting", {
-                            state:
-                            {
-                                name: name,
-                                email: email,
-                                primaryLanguage: primaryLanguage,
-                                userGuid: userGuid,
-                                learnLanguage: learnLanguage,
-                                // beginRoomGuid: data.room.guid
-                            }
-                        });
+                        console.log("---------You got accepted!");
+                        handleProceedChatting(sentPairRequestEmail, sentPairRequestName);
                     }
                     else if (status === 'declined') {
-                        setSentPairRequest(false);
-                        sentPairRequestEmail(null);
+                        setSentPairRequestTrack([false, null, null]);
                     }
                 }
             });   
     }
 
     const handleProceedChatting = (otherUserEmail, otherUserName) => {
+        console.log("handleProceedChatting called");
         const userInfo = {};
         // userInfo[email] = {"name": name, "primaryLanguage": primaryLanguage};
         userInfo[userGuid] = {"name": name, "primaryLanguage": primaryLanguage};
@@ -209,7 +202,26 @@ const Random = () => {
     const renderDialogPairUp = () => {
         // check i sent a pair request
         if (sentPairRequest && sentPairRequestEmail) {
-            
+            return (
+                <Dialog
+                    open={true}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={(() => { })}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">Please wait</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description" className="random-popup">
+                            Waiting for user to accept your request...
+                            If your request is declined you will not be able to pair up again to the same user.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    </DialogActions>
+                </Dialog>
+            );
         }
         
         // check if i received a pair request
