@@ -19,6 +19,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const appPort = process.env.PORT || 3000;
 
+// use static files of compiiled client-frontend
+app.use(express.static("build"));
+
+
 app.use("/users", usersRouter);
 app.use("/random", randomRouter);
 app.use("/chats", chatRouter);
