@@ -10,6 +10,12 @@ import chatRouter from "./routes/chat.js";
 import setupDb from "./db/config.js";
 
 
+import path from "path"
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 dotenv.config();
 setupDb(process.env.DB_URL);
 
@@ -20,16 +26,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const appPort = process.env.PORT || 3000;
 
 // use static files of compiiled client-frontend
-app.use(express.static("build"));
+// add middlewares
+app.use(express.static(path.join(__dirname, ".", "build")));
+app.use(express.static("public"));
+
 
 
 app.use("/users", usersRouter);
 app.use("/random", randomRouter);
 app.use("/chats", chatRouter);
 
-app.get("/", async (req, res) => {
-  return res.status(200).json({ message: "Hello World" });
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, ".", "build", "index.html"));
 });
+// app.get("*", async (req, res) => {
+//   return res.status(200).json({ message: "Hello World" });
+// });
 
 const server = http.createServer(app);
 server.listen(appPort);
