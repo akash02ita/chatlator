@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": ">=18"
+  },
   "proxy": "http://136.159.5.25:3000",
   "name": "client",
   "version": "0.1.0",
