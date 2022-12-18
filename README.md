@@ -2,6 +2,12 @@
 
 A multi-language chat web application that allows individuals to communicate in their respective native languages. With Chatlator, users can type in their native language and have their messages translated for the recipient in real time. This eliminates language barriers and enables individuals who speak different languages to understand each other easily. Additionally, Chatlator can be used as a language learning tool, as it allows users to view the original text alongside the translated version. This allows for convenient practice and improvement of language skills.
 
+# Live link
+
+https://chatlator.onrender.com
+
+Please allow up to 30 seconds (you may refresh) to reactivate **render.com** deployed link. When not used for a period of time, it requires some time reactivate.
+
 # Installation and Local running
 
 ## Windows
