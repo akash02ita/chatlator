@@ -1,3 +1,10 @@
+import { logmsg } from "../debug.js";
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const _fname = path.basename(__filename);
+
 // import from chatRoom and chatMessage the requires functions
 import chatRoomsController from "../controllers/chatRoom.js";
 import chatMessagesController from "./chatMessage.js";

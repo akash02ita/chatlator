@@ -1,6 +1,12 @@
 import { randomUUID } from "crypto";
 import mongoose from "mongoose";
 
+import { logmsg } from "../debug.js";
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const _fname = path.basename(__filename);
 
 const chatMessageSchema = new mongoose.Schema(
   {
@@ -37,6 +43,7 @@ chatMessageSchema.statics.createChatMessage = async function (contentOriginal, c
     const chatMessage = await this.create({ contentOriginal, contentTranslated, roomGuid, senderGuid });
     return chatMessage;
   } catch (error) {
+    logmsg(_fname, `${roomGuid}: failed message create: ${error}`);
     throw error;
   }
 };
@@ -61,7 +68,7 @@ chatMessageSchema.statics.getLatestChatByRoomGuid = async function (roomGuid) {
     // https://stackoverflow.com/questions/12467102/how-to-get-the-latest-and-oldest-record-in-mongoose-js-or-just-the-timespan-bet
     const latestChat = await this.findOne({ roomGuid: roomGuid }, {}, { sort: { 'createdAt' : -1 } }); // works
     // const [latestChat] = await this.find({ roomGuid: roomGuid }).sort({createdAt: -1}).limit(1); // even this one works
-    console.log("latestChat is ",)
+    // logmsg(_fname, "latestChat is ", latestChat);
     return latestChat;
   
   } catch (error) {

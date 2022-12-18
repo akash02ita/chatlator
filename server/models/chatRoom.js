@@ -2,6 +2,12 @@ import { randomUUID } from "crypto";
 import mongoose from "mongoose";
 import { userInfo } from "os";
 
+import { logmsg } from "../debug.js";
+import path from "path";
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const _fname = path.basename(__filename);
 
 const chatRoomSchema = new mongoose.Schema(
   {
@@ -30,7 +36,7 @@ chatRoomSchema.statics.createChatRoom = async function (userInfo) {
     // find the room matching both users as key (otherwise may return wrong room, possibly)
     const existingChatRoom = await this.findOne({ [`userInfo.${userGuids[0]}`]: { $exists: true }, [`userInfo.${userGuids[1]}`]: { $exists: true } });
     
-    console.log("Existing chat room is ", existingChatRoom);
+    logmsg(_fname, "Existing chat room is ", existingChatRoom);
     if (existingChatRoom) return existingChatRoom;
 
     const chatRoom = await this.create({ userInfo });

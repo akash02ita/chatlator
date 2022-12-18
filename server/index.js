@@ -10,10 +10,12 @@ import chatRouter from "./routes/chat.js";
 import setupDb from "./db/config.js";
 
 
+import { logmsg } from "./debug.js";
 import path from "path"
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const _fname = path.basename(__filename);
 
 
 dotenv.config();
@@ -47,9 +49,9 @@ const server = http.createServer(app);
 server.listen(appPort);
 
 server.on("listening", () => {
-    console.log(`Our Server is listening here: http://localhost:${appPort}/`)
+    logmsg(_fname,`Our Server is listening here: http://localhost:${appPort}/`)
 });
 
 server.on("connection", () => {
-    console.log('Somebody connected to our server.')
+    logmsg(_fname,'Somebody connected to our server.')
 });

@@ -1,6 +1,13 @@
 import UserModel, { PRIMARY_LANGUAGES } from "../models/user.js";
 import ChatRoomModel from "../models/chatRoom.js";
 
+import { logmsg } from "../debug.js";
+import path from "path"
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const _fname = path.basename(__filename);
+
 const usersController = {
     handleCreateUser: async (req, res) => {
         try {
@@ -12,7 +19,7 @@ const usersController = {
             //     const userInfo = {};
             //     userInfo[puser.guid] = {"primaryLanguage": puser.primaryLanguage, "name": puser.name};
             //     userInfo[newUser.guid] = {"primaryLanguage": newUser.primaryLanguage, "name": newUser.name};
-            //     // console.log("new user info is ", userInfo);
+            //     // logmsg(_fname, "new user info is ", userInfo);
             //     userInfos.push(userInfo);
             // });
             // for (const userInfo of userInfos) {
